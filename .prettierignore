@@ -1,0 +1,5 @@
+dist/
+dist_example/
+node_modules/
+CHANGELOG.md
+generated.ts

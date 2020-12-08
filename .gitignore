@@ -1,0 +1,4 @@
+dist/
+dist_example/
+node_modules/
+generated.ts

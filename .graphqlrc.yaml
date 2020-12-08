@@ -1,0 +1,2 @@
+name: Example App
+schema: ./example/src/schema.graphql
