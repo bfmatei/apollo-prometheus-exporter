@@ -11,7 +11,5 @@ plugins:
         - CHANGELOG.md
   - - '@semantic-release/github'
     - assets:
-        - path: CHANGELOG.md
-          label: Changelog
         - path: dist/*.tgz
           label: NPM Package
