@@ -14,8 +14,6 @@ jobs:
         uses: actions/setup-node@v2-beta
       - name: Install Dependencies
         run: npm install
-        env:
-          HUSKY: 0
       - name: Build
         run: npm run build
       - name: Semantic Release
@@ -27,4 +25,5 @@ jobs:
           GIT_COMMITTER_EMAIL: ${{ secrets.GIT_COMMITTER_EMAIL }}
           GIT_COMMITTER_NAME: ${{ secrets.GIT_COMMITTER_NAME }}
           GIT_CREDENTIALS: ${{ secrets.GIT_CREDENTIALS }}
+          HUSKY: 0
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

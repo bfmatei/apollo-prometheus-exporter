@@ -16,7 +16,7 @@
   "repository": "github:bfmatei/apollo-prometheus-exporter",
   "scripts": {
     "postinstall": "husky install",
-    "postpublish": "copyfiles -f dist/CHANGELOG.md .",
+    "prepublish": "copyfiles -f CHANGELOG.md dist",
     "start": "npm run example:start:watch",
     "build": "npm run lib:build",
     "example:clean-dist": "rimraf dist_example",
@@ -28,8 +28,8 @@
     "example:start:watch": "nodemon --watch example --watch lib -e ts,graphql,json --exec 'npm run example:start'",
     "lib:clean-dist": "rimraf dist",
     "lib:compile": "tsc -p lib/tsconfig.json",
-    "lib:copy-assets": "copyfiles -f lib/package.json README.md CHANGELOG.md dist",
-    "lib:build": "run-s lib:clean-dist lib:compile lib:copy-assets",
+    "lib:copy-assets": "copyfiles -f lib/package.json README.md dist",
+    "lib:build": "run-s lib:clean-dist lib:compile",
     "prettify": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
     "semantic-release": "semantic-release"
   },
