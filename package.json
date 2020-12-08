@@ -18,7 +18,7 @@
     "postinstall": "husky install",
     "start": "npm run example:start:watch",
     "build": "npm run lib:build",
-    "release": "run-s lib:copy-assets lib:release",
+    "release": "npm run lib:release",
     "prettify": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
     "example:clean-dist": "rimraf dist_example",
     "example:codegen": "graphql-codegen",
@@ -30,7 +30,7 @@
     "lib:clean-dist": "rimraf dist",
     "lib:compile": "tsc -p lib/tsconfig.json",
     "lib:build": "run-s lib:clean-dist lib:compile",
-    "lib:copy-assets": "copyfiles -f lib/package.json CHANGELOG.md LICENSE README.md dist",
+    "lib:copy-assets": "copyfiles -f lib/package.json README.md dist",
     "lib:release": "semantic-release"
   },
   "devDependencies": {
