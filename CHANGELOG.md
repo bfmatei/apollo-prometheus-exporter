@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.2...v1.0.3) (2020-12-08)
+
+
+### Bug Fixes
+
+* enforce a new package publish ([25c1bdc](https://github.com/bfmatei/apollo-prometheus-exporter/commit/25c1bdc28bafe9d6227e1f8b1f25abadb794e13d))
+
 ## [1.0.2](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.1...v1.0.2) (2020-12-08)
 
 
