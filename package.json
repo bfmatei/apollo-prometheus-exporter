@@ -16,9 +16,10 @@
   "repository": "github:bfmatei/apollo-prometheus-exporter",
   "scripts": {
     "postinstall": "husky install",
-    "prepublish": "copyfiles -f CHANGELOG.md dist",
     "start": "npm run example:start:watch",
     "build": "npm run lib:build",
+    "release": "run-s lib:copy-assets lib:release",
+    "prettify": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
     "example:clean-dist": "rimraf dist_example",
     "example:codegen": "graphql-codegen",
     "example:compile": "tsc -p example/tsconfig.json",
@@ -28,10 +29,9 @@
     "example:start:watch": "nodemon --watch example --watch lib -e ts,graphql,json --exec 'npm run example:start'",
     "lib:clean-dist": "rimraf dist",
     "lib:compile": "tsc -p lib/tsconfig.json",
-    "lib:copy-assets": "copyfiles -f lib/package.json README.md dist",
     "lib:build": "run-s lib:clean-dist lib:compile",
-    "prettify": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
-    "semantic-release": "semantic-release"
+    "lib:copy-assets": "copyfiles -f lib/package.json CHANGELOG.md LICENSE README.md dist",
+    "lib:release": "semantic-release"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.19.4",
