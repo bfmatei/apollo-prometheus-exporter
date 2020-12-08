@@ -5,6 +5,7 @@ plugins:
     - changelogFile: CHANGELOG.md
   - - '@semantic-release/npm'
     - pkgRoot: dist
+      tarballDir: dist
   - - '@semantic-release/git'
     - assets:
         - CHANGELOG.md
