@@ -1,0 +1,3 @@
+groups:
+- name: apollo_server_rules
+  rules:
