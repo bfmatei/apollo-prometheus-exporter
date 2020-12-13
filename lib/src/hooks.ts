@@ -1,8 +1,10 @@
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
-import { TracingFormat } from 'apollo-tracing';
-import { Counter, Histogram, LabelValues } from 'prom-client';
+import { GraphQLFieldResolverParams } from 'apollo-server-types';
+import { GraphQLObjectType } from 'graphql';
+import { Path } from 'graphql/jsutils/Path';
+import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
 
-import { convertNsToS, filterLabels } from './helpers';
+import { convertMsToS, filterLabels } from './helpers';
 import { MetricsNames, Metrics, MetricTypes } from './metrics';
 
 export function getLabelsFromContext(context: any): LabelValues<string> {
@@ -12,30 +14,44 @@ export function getLabelsFromContext(context: any): LabelValues<string> {
   };
 }
 
+export function countFieldAncestors(path: Path | undefined): string {
+  let counter = 0;
+
+  while (path !== undefined) {
+    path = path.prev;
+    counter++;
+  }
+
+  return counter.toString();
+}
+
 export function getLabelsFromFieldResolver({
-  fieldName,
-  parentType,
-  returnType
-}: TracingFormat['execution']['resolvers'][number]): LabelValues<string> {
+  info: { fieldName, parentType, path, returnType }
+}: GraphQLFieldResolverParams<any, any>): LabelValues<string> {
   return {
     fieldName,
-    parentType,
-    returnType
+    parentType: parentType.name,
+    pathLength: countFieldAncestors(path),
+    returnType: (returnType as GraphQLObjectType)?.name
   };
 }
 
 export function generateHooks(metrics: Metrics): ApolloServerPlugin {
-  const actionMetric = (name: MetricsNames, labels: LabelValues<string> = {}, value?: any) => {
+  const actionMetric = (name: MetricsNames, labels: LabelValues<string> = {}, value?: number) => {
     if (!metrics[name].disabled) {
       const filteredLabels = filterLabels(labels);
 
       switch (metrics[name].type) {
+        case MetricTypes.GAUGE:
+          (metrics[name].instance as Gauge<string>).inc(convertMsToS(value as number));
+          break;
+
         case MetricTypes.COUNTER:
           (metrics[name].instance as Counter<string>).inc(filteredLabels);
           break;
 
         case MetricTypes.HISTOGRAM:
-          (metrics[name].instance as Histogram<string>).observe(filteredLabels, convertNsToS(value));
+          (metrics[name].instance as Histogram<string>).observe(filteredLabels, convertMsToS(value as number));
           break;
       }
     }
@@ -43,16 +59,18 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
 
   return {
     serverWillStart() {
-      actionMetric(MetricsNames.SERVER_STARTING);
+      actionMetric(MetricsNames.SERVER_STARTING, {}, Date.now());
 
       return {
         serverWillStop() {
-          actionMetric(MetricsNames.SERVER_CLOSING);
+          actionMetric(MetricsNames.SERVER_CLOSING, {}, Date.now());
         }
       };
     },
 
     requestDidStart(requestContext) {
+      const requestStartDate = Date.now();
+
       actionMetric(MetricsNames.QUERY_STARTED, getLabelsFromContext(requestContext));
 
       return {
@@ -83,35 +101,58 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
         executionDidStart(context) {
           actionMetric(MetricsNames.QUERY_EXECUTION_STARTED, getLabelsFromContext(context));
 
-          return (err) => {
-            if (err) {
-              actionMetric(MetricsNames.QUERY_EXECUTION_FAILED, getLabelsFromContext(context));
+          return {
+            willResolveField(field) {
+              const fieldResolveStart = Date.now();
+
+              return () => {
+                const fieldResolveEnd = Date.now();
+
+                actionMetric(
+                  MetricsNames.QUERY_FIELD_RESOLUTION_DURATION,
+                  {
+                    ...getLabelsFromContext(context),
+                    ...getLabelsFromFieldResolver(field)
+                  },
+                  fieldResolveEnd - fieldResolveStart
+                );
+              };
+            },
+            executionDidEnd(err) {
+              if (err) {
+                actionMetric(MetricsNames.QUERY_EXECUTION_FAILED, getLabelsFromContext(context));
+              }
             }
           };
         },
 
         didEncounterErrors(context) {
+          const requestEndDate = Date.now();
+
           actionMetric(MetricsNames.QUERY_FAILED, getLabelsFromContext(context));
+
+          actionMetric(
+            MetricsNames.QUERY_DURATION,
+            {
+              ...getLabelsFromContext(context),
+              success: 'false'
+            },
+            requestEndDate - requestStartDate
+          );
         },
 
         willSendResponse(context) {
-          const tracing: TracingFormat = context.response.extensions?.tracing;
+          const requestEndDate = Date.now();
 
-          if (tracing && tracing.version === 1) {
-            const contextLabels = getLabelsFromContext(context);
-
-            actionMetric(MetricsNames.QUERY_DURATION, contextLabels, tracing.duration);
-
-            tracing.execution.resolvers.forEach((resolver) => {
-              actionMetric(
-                MetricsNames.QUERY_FIELD_RESOLUTION_DURATION,
-                {
-                  ...contextLabels,
-                  ...getLabelsFromFieldResolver(resolver)
-                },
-                resolver.duration
-              );
-            });
+          if ((context.errors?.length ?? 0) === 0) {
+            actionMetric(
+              MetricsNames.QUERY_DURATION,
+              {
+                ...getLabelsFromContext(context),
+                success: 'true'
+              },
+              requestEndDate - requestStartDate
+            );
           }
         }
       };

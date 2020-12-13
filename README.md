@@ -9,21 +9,21 @@ It uses [prom-client](https://github.com/siimon/prom-client) under the hood the 
 
 ## Metrics
 
-| Name                                     | Description                                                     | Type      |
-| ---------------------------------------- | --------------------------------------------------------------- | --------- |
-| `apollo_server_starting`                 | The amount of times Apollo Server is starting.                  | Counter   |
-| `apollo_server_closing`                  | The amount of times Apollo Server is closing.                   | Counter   |
-| `apollo_query_started`                   | The amount of GraphQL queries received by Apollo Server.        | Counter   |
-| `apollo_query_failed`                    | The amount of GraphQL queries which failed.                     | Counter   |
-| `apollo_query_parse_started`             | The amount of GraphQL queries for which parsing has failed.     | Counter   |
-| `apollo_query_parse_failed`              | The amount of GraphQL queries for which validation has started. | Counter   |
-| `apollo_query_validation_started`        | The amount of GraphQL queries for which validation has failed.  | Counter   |
-| `apollo_query_validation_failed`         | The amount of GraphQL queries which could be resolved.          | Counter   |
-| `apollo_query_resolved`                  | The amount of GraphQL queries for which execution has started.  | Counter   |
-| `apollo_query_execution_started`         | The amount of GraphQL queries for which execution has failed.   | Counter   |
-| `apollo_query_execution_failed`          | The amount of GraphQL queries that failed.                      | Counter   |
-| `apollo_query_duration`                  | The total duration of GraphQL queries.                          | Histogram |
-| `apollo_query_field_resolution_duration` | The total duration for resolving fields.                        | Histogram |
+| Name                                     | Description                                             | Type      |
+| ---------------------------------------- | ------------------------------------------------------- | --------- |
+| `apollo_server_starting`                 | The last timestamp when Apollo Server was starting.     | Gauge     |
+| `apollo_server_closing`                  | The amount timestamp when Apollo Server was closing.    | Gauge     |
+| `apollo_query_started`                   | The amount of received queries.                         | Counter   |
+| `apollo_query_failed`                    | The amount of queries that failed.                      | Counter   |
+| `apollo_query_parse_started`             | The amount of queries for which parsing has started.    | Counter   |
+| `apollo_query_parse_failed`              | The amount of queries for which parsing has failed.     | Counter   |
+| `apollo_query_validation_started`        | The amount of queries for which validation has started. | Counter   |
+| `apollo_query_validation_failed`         | The amount of queries for which validation has failed.  | Counter   |
+| `apollo_query_resolved`                  | The amount of queries which could be resolved.          | Counter   |
+| `apollo_query_execution_started`         | The amount of queries for which execution has started.  | Counter   |
+| `apollo_query_execution_failed`          | The amount of queries for which execution has failed.   | Counter   |
+| `apollo_query_duration`                  | The total duration of a query.                          | Histogram |
+| `apollo_query_field_resolution_duration` | The total duration for resolving fields.                | Histogram |
 
 For default metrics, please refer to [prom-client](https://github.com/siimon/prom-client) default metrics.
 
@@ -43,16 +43,13 @@ For default metrics, please refer to [prom-client](https://github.com/siimon/pro
    const prometheusExporterPlugin = createPrometheusExporterPlugin({ app });
    ```
 
-3. Add the plugin to ApolloServer and, optionally, enable tracing
+3. Add the plugin to ApolloServer
 
    ```ts
    const server = new ApolloServer({
-     plugins: [prometheusExporterPlugin],
-     tracing: true
+     plugins: [prometheusExporterPlugin]
    });
    ```
-
-If tracing is not enabled in ApolloServer, some metrics like `apollo_query_duration` and `apollo_query_field_resolution_duration` won't be available.
 
 For a complete working example, please have a look over the `example` project in this repository.
 

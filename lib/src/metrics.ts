@@ -1,4 +1,4 @@
-import { Counter, Histogram, Metric, Registry } from 'prom-client';
+import { Counter, Gauge, Histogram, Metric, Registry } from 'prom-client';
 
 import { Context } from './context';
 
@@ -19,6 +19,7 @@ export enum MetricsNames {
 }
 
 export enum MetricTypes {
+  GAUGE,
   COUNTER,
   HISTOGRAM
 }
@@ -28,88 +29,93 @@ export interface MetricConfig {
   help: string;
   type: MetricTypes;
   labelNames?: string[];
+  buckets?: number[];
 }
 
 export const queryLabelNames = ['operationName', 'operation'];
 
-export const fieldLabelNames = ['operationName', 'operation', 'fieldName', 'parentType', 'returnType'];
+export const fieldLabelNames = ['operationName', 'operation', 'fieldName', 'parentType', 'returnType', 'pathLength'];
+
+export const durationHistogramsBuckets = [0.001, 0.005, 0.015, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 5, 10];
 
 export const metricsConfig: MetricConfig[] = [
   {
     name: MetricsNames.SERVER_STARTING,
-    help: 'The amount of times Apollo Server is starting.',
-    type: MetricTypes.COUNTER
+    help: 'The last timestamp when Apollo Server was starting.',
+    type: MetricTypes.GAUGE
   },
   {
     name: MetricsNames.SERVER_CLOSING,
-    help: 'The amount of times Apollo Server is closing.',
-    type: MetricTypes.COUNTER
+    help: 'The amount timestamp when Apollo Server was closing.',
+    type: MetricTypes.GAUGE
   },
   {
     name: MetricsNames.QUERY_STARTED,
-    help: 'The amount of GraphQL queries received by Apollo Server.',
+    help: 'The amount of received queries.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_PARSE_STARTED,
-    help: 'The amount of GraphQL queries for which parsing has started.',
+    help: 'The amount of queries for which parsing has started.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_PARSE_FAILED,
-    help: 'The amount of GraphQL queries for which parsing has failed.',
+    help: 'The amount of queries for which parsing has failed.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_VALIDATION_STARTED,
-    help: 'The amount of GraphQL queries for which validation has started.',
+    help: 'The amount of queries for which validation has started.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_VALIDATION_FAILED,
-    help: 'The amount of GraphQL queries for which validation has failed.',
+    help: 'The amount of queries for which validation has failed.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_RESOLVED,
-    help: 'The amount of GraphQL queries which could be resolved.',
+    help: 'The amount of queries which could be resolved.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_EXECUTION_STARTED,
-    help: 'The amount of GraphQL queries for which execution has started.',
+    help: 'The amount of queries for which execution has started.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_EXECUTION_FAILED,
-    help: 'The amount of GraphQL queries for which execution has failed.',
+    help: 'The amount of queries for which execution has failed.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_FAILED,
-    help: 'The amount of GraphQL queries that failed.',
+    help: 'The amount of queries that failed.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
   },
   {
     name: MetricsNames.QUERY_DURATION,
-    help: 'The total duration of GraphQL queries.',
+    help: 'The total duration of a query.',
     type: MetricTypes.HISTOGRAM,
-    labelNames: queryLabelNames
+    labelNames: [...queryLabelNames, 'success'],
+    buckets: durationHistogramsBuckets
   },
   {
     name: MetricsNames.QUERY_FIELD_RESOLUTION_DURATION,
     help: 'The total duration for resolving fields.',
     type: MetricTypes.HISTOGRAM,
-    labelNames: fieldLabelNames
+    labelNames: fieldLabelNames,
+    buckets: durationHistogramsBuckets
   }
 ];
 
@@ -132,7 +138,7 @@ export function generateMetrics(register: Registry, { disabledMetrics }: Context
     };
 
     if (!disabled) {
-      const config = {
+      const commonConfig = {
         name: metric.name,
         help: metric.help,
         labelNames: metric.labelNames,
@@ -140,12 +146,19 @@ export function generateMetrics(register: Registry, { disabledMetrics }: Context
       };
 
       switch (metric.type) {
+        case MetricTypes.GAUGE:
+          acc[metric.name].instance = new Gauge(commonConfig);
+          break;
+
         case MetricTypes.COUNTER:
-          acc[metric.name].instance = new Counter(config);
+          acc[metric.name].instance = new Counter(commonConfig);
           break;
 
         case MetricTypes.HISTOGRAM:
-          acc[metric.name].instance = new Histogram(config);
+          acc[metric.name].instance = new Histogram({
+            ...commonConfig,
+            buckets: metric.buckets
+          });
           break;
       }
     }
