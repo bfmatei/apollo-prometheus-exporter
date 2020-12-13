@@ -1,3 +1,4 @@
+import apolloPackageJson from 'apollo-server-express/package.json';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLFieldResolverParams } from 'apollo-server-types';
 import { GraphQLObjectType } from 'graphql';
@@ -25,6 +26,10 @@ export function countFieldAncestors(path: Path | undefined): string {
   return counter.toString();
 }
 
+export function getApolloServerVersion(): string | undefined {
+  return apolloPackageJson.version ? `v${apolloPackageJson.version}` : undefined;
+}
+
 export function getLabelsFromFieldResolver({
   info: { fieldName, parentType, path, returnType }
 }: GraphQLFieldResolverParams<any, any>): LabelValues<string> {
@@ -43,7 +48,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
 
       switch (metrics[name].type) {
         case MetricTypes.GAUGE:
-          (metrics[name].instance as Gauge<string>).inc(convertMsToS(value as number));
+          (metrics[name].instance as Gauge<string>).set(filteredLabels, convertMsToS(value as number));
           break;
 
         case MetricTypes.COUNTER:
@@ -59,11 +64,25 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
 
   return {
     serverWillStart() {
-      actionMetric(MetricsNames.SERVER_STARTING, {}, Date.now());
+      const version = getApolloServerVersion();
+
+      actionMetric(
+        MetricsNames.SERVER_STARTING,
+        {
+          version
+        },
+        Date.now()
+      );
 
       return {
         serverWillStop() {
-          actionMetric(MetricsNames.SERVER_CLOSING, {}, Date.now());
+          actionMetric(
+            MetricsNames.SERVER_CLOSING,
+            {
+              version
+            },
+            Date.now()
+          );
         }
       };
     },

@@ -32,6 +32,8 @@ export interface MetricConfig {
   buckets?: number[];
 }
 
+export const serverLabelNames = ['version'];
+
 export const queryLabelNames = ['operationName', 'operation'];
 
 export const fieldLabelNames = ['operationName', 'operation', 'fieldName', 'parentType', 'returnType', 'pathLength'];
@@ -42,12 +44,14 @@ export const metricsConfig: MetricConfig[] = [
   {
     name: MetricsNames.SERVER_STARTING,
     help: 'The last timestamp when Apollo Server was starting.',
-    type: MetricTypes.GAUGE
+    type: MetricTypes.GAUGE,
+    labelNames: serverLabelNames
   },
   {
     name: MetricsNames.SERVER_CLOSING,
     help: 'The amount timestamp when Apollo Server was closing.',
-    type: MetricTypes.GAUGE
+    type: MetricTypes.GAUGE,
+    labelNames: serverLabelNames
   },
   {
     name: MetricsNames.QUERY_STARTED,
