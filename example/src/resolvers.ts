@@ -1,12 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { authors, books } from './data';
+import { authors, authorsInitialSize, books, booksInitialSize } from './data';
 import { Resolvers } from './generated';
 
-export function generateAsyncResponse<T = any>(dataFn: () => T): Promise<T> {
+export function generateAsyncResponse<T = any>(
+  dataFn: () => T,
+  alwaysReturnSuccess: boolean = false,
+  maxTimeout: number = 500
+): Promise<T> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (Math.random() < 0.985) {
+      if (!alwaysReturnSuccess && Math.random() < 0.999) {
         let data: T;
 
         try {
@@ -19,13 +23,13 @@ export function generateAsyncResponse<T = any>(dataFn: () => T): Promise<T> {
       } else {
         reject(new Error('Error in async operation'));
       }
-    }, Math.floor(Math.random() * 500) + 1);
+    }, Math.floor(Math.random() * maxTimeout) + 1);
   });
 }
 
 export const resolvers: Resolvers = {
   Query: {
-    author(_parent, { id }) {
+    async author(_parent, { id }) {
       return generateAsyncResponse(() => {
         const author = authors.find((author) => author.id === id);
 
@@ -36,10 +40,10 @@ export const resolvers: Resolvers = {
         return author;
       });
     },
-    authors() {
-      return generateAsyncResponse(() => authors);
+    async authors() {
+      return generateAsyncResponse(() => authors.slice(0, authorsInitialSize));
     },
-    book(_parent, { id }) {
+    async book(_parent, { id }) {
       return generateAsyncResponse(() => {
         const book = books.find((book) => book.id === id);
 
@@ -50,12 +54,12 @@ export const resolvers: Resolvers = {
         return book;
       });
     },
-    books() {
-      return generateAsyncResponse(() => books);
+    async books() {
+      return generateAsyncResponse(() => books.slice(0, booksInitialSize));
     }
   },
   Mutation: {
-    addAuthor(_parent, { author }) {
+    async addAuthor(_parent, { author }) {
       return generateAsyncResponse(() => {
         const newAuthor = {
           id: uuidv4(),
@@ -67,7 +71,7 @@ export const resolvers: Resolvers = {
         return newAuthor;
       });
     },
-    deleteAuthor(_parent, { authorId }) {
+    async deleteAuthor(_parent, { authorId }) {
       return generateAsyncResponse(() => {
         const authorIndex = authors.findIndex((author) => {
           return author.id === authorId;
@@ -94,7 +98,7 @@ export const resolvers: Resolvers = {
         return authorId;
       });
     },
-    addBook(_parent, { book }) {
+    async addBook(_parent, { book }) {
       return generateAsyncResponse(() => {
         const newBook = {
           authorId: book.authorId,
@@ -107,7 +111,7 @@ export const resolvers: Resolvers = {
         return newBook;
       });
     },
-    deleteBook(_parent, { bookId }) {
+    async deleteBook(_parent, { bookId }) {
       return generateAsyncResponse(() => {
         const bookIndex = books.findIndex((book) => {
           return book.id === bookId;

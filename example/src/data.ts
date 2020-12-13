@@ -43,6 +43,8 @@ export const authors: AuthorModel[] = [
   }
 ];
 
+export const authorsInitialSize = authors.length;
+
 export const books: BookModel[] = [
   {
     id: '1287910e-6e8a-4924-b105-cdcf7ae6ca28',
@@ -115,3 +117,5 @@ export const books: BookModel[] = [
     authorId: 'd7a5b285-ca02-48ac-be38-5576e4b77f2d'
   }
 ];
+
+export const booksInitialSize = books.length;
