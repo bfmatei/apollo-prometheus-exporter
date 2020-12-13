@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.3...v1.0.4) (2020-12-10)
+
+
+### Bug Fixes
+
+* release new version with updated mixin ([65ba29e](https://github.com/bfmatei/apollo-prometheus-exporter/commit/65ba29e94c2976e8cefbc40d7fc8f1c8aceda856))
+
 ## [1.0.3](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.2...v1.0.3) (2020-12-08)
 
 
