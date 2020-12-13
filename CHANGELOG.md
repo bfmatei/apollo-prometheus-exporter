@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.4...v1.1.0) (2020-12-13)
+
+
+### Features
+
+* add apollo version to apollo_server_starting and apollo_server_closing ([ba52552](https://github.com/bfmatei/apollo-prometheus-exporter/commit/ba52552198dfe1b34d44330182913c712b111752))
+* refactor the lib ([c80c7ce](https://github.com/bfmatei/apollo-prometheus-exporter/commit/c80c7cefbf6d3c86c306c8b9e821719dc24886e3))
+
 ## [1.0.4](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.3...v1.0.4) (2020-12-10)
 
 
