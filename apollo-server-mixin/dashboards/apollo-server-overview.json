@@ -1689,8 +1689,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "0.05",
-          "value": "0.05"
+          "text": "1",
+          "value": "1"
         },
         "hide": 0,
         "includeAll": false,
@@ -1714,7 +1714,7 @@
             "value": "0.015"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "0.05",
             "value": "0.05"
           },
@@ -1744,7 +1744,7 @@
             "value": "0.5"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "1",
             "value": "1"
           },
@@ -1767,8 +1767,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "0.2",
-          "value": "0.2"
+          "text": "5",
+          "value": "5"
         },
         "hide": 0,
         "includeAll": false,
@@ -1802,7 +1802,7 @@
             "value": "0.1"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "0.2",
             "value": "0.2"
           },
@@ -1827,7 +1827,7 @@
             "value": "1"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "5",
             "value": "5"
           },
