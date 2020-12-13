@@ -20,6 +20,7 @@
     "build": "npm run lib:build",
     "release": "npm run lib:release",
     "prettify": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
+    "lint-staged": "lint-staged",
     "example:clean-dist": "rimraf dist_example",
     "example:codegen": "graphql-codegen",
     "example:compile": "tsc -p example/tsconfig.json",
