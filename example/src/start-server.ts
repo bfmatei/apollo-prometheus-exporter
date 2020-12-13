@@ -18,8 +18,7 @@ export function startServer(port: number = 4000, hostname: string = '0.0.0.0') {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    plugins: [prometheusExporterPlugin],
-    tracing: true
+    plugins: [prometheusExporterPlugin]
   });
 
   server.applyMiddleware({ app, path: '/' });

@@ -9,4 +9,6 @@ generates:
       useIndexSignature: true
       mappers:
         Author: ./types#AuthorModel
+        AddAuthorInput: ./types#AddAuthorModel
         Book: ./types#BookModel
+        AddBookInput: ./types#AddBookModel

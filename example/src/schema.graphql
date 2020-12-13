@@ -1,10 +1,15 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 type Author {
   books: [Book]!
   id: ID!
+  name: String!
+}
+
+input AddAuthorInput {
   name: String!
 }
 
@@ -14,9 +19,21 @@ type Book {
   title: String!
 }
 
+input AddBookInput {
+  authorId: ID!
+  title: String!
+}
+
 type Query {
   author(id: ID!): Author
   authors: [Author]!
   book(id: ID!): Book
   books: [Book]!
+}
+
+type Mutation {
+  addAuthor(author: AddAuthorInput!): Author!
+  deleteAuthor(authorId: ID!): ID!
+  addBook(book: AddBookInput!): Book!
+  deleteBook(bookId: ID!): ID!
 }
