@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="lib:build" type="js.build_tools.npm">
+  <configuration default="false" name="Run Prettier" type="js.build_tools.npm">
     <package-json value="$PROJECT_DIR$/package.json" />
     <command value="run" />
     <scripts>
-      <script value="lib:build" />
+      <script value="prettier" />
     </scripts>
     <node-interpreter value="project" />
     <envs />
