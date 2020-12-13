@@ -12,40 +12,718 @@
       }
     ]
   },
+  "description": "Monitor an application built using Apollo Server",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 55,
-  "iteration": 1607352728485,
+  "id": 1,
+  "iteration": 1607889174049,
   "links": [],
   "panels": [
     {
-      "aliasColors": {},
-      "bars": false,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "$datasource",
-      "description": "",
-      "fill": 1,
-      "fillGradient": 0,
+      "datasource": null,
       "gridPos": {
-        "h": 7,
-        "w": 8,
+        "h": 1,
+        "w": 24,
         "x": 0,
         "y": 0
       },
+      "id": 1,
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorPostfix": false,
+      "colorPrefix": false,
+      "colorValue": true,
+      "colors": ["#d44a3a", "rgba(237, 129, 40, 0.89)", "#299c46"],
+      "datasource": "$datasource",
+      "description": "Apdex score calculated using the selected request target and request tolerance.\n\nFor more information, please visit https://en.wikipedia.org/wiki/Apdex.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": true,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "((sum(apollo_query_duration_bucket{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", le=\"$requestTarget\", success=\"true\"}) + (sum(apollo_query_duration_bucket{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", le=\"$requestTolerance\", success=\"true\"}) - sum(apollo_query_duration_bucket{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", le=\"$requestTarget\", success=\"true\"})) / 2) / sum(apollo_query_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", success=\"true\"})) * 100",
+          "hide": false,
+          "legendFormat": "Apdex",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "70,90",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Apdex Score",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": true,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "Requests per second for the selected interval.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 3,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": true,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$interval]))",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "100,200",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Requests Per Second",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorPostfix": false,
+      "colorPrefix": false,
+      "colorValue": false,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "Number of received requests.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "id": 4,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": true,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"})",
+          "legendFormat": "Started",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Requests Count",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": true,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "The percentage of requests that errored.",
+      "format": "percent",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "id": 5,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": true,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": true,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "(sum(apollo_query_failed{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"} OR on() vector(0)) / sum(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"})) * 100",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "Failed %",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "5,10",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Requests Error Rate",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "The number of times Node.js restarted.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 6,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(changes(process_start_time_seconds{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range]))",
+          "instant": false,
+          "legendFormat": "Node.js",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Node.js Restarts",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "The number of times Apollo Server restarted.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 15,
+        "y": 1
+      },
+      "id": 7,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "sum(changes(apollo_server_starting{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range]))",
+          "legendFormat": "Apollo Server",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Apollo Server Restarts",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "The version of Node.js.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 18,
+        "y": 1
+      },
+      "id": 8,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "version",
+      "targets": [
+        {
+          "expr": "nodejs_version_info",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Node.js Version",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "first"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": ["#299c46", "rgba(237, 129, 40, 0.89)", "#d44a3a"],
+      "datasource": "$datasource",
+      "description": "The version of Apollo Server.",
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 1
+      },
+      "id": 9,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "options": {},
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "version",
+      "targets": [
+        {
+          "expr": "apollo_server_starting",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Apollo Server Version",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [],
+      "valueName": "current"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 10,
+      "panels": [],
+      "title": "Apollo",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "cacheTimeout": null,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$datasource",
+      "description": "Requests per second for the selected interval.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      },
       "hiddenSeries": false,
       "hideTimeOverride": false,
-      "id": 7,
+      "id": 11,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -65,24 +743,29 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\"}[5m])) * 60",
+          "expr": "sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\"}[$interval])) by (instance)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "Total",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[5m])) by (hostname) * 60",
-          "legendFormat": "{{hostname}}",
+          "expr": "sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$interval])) by (instance, hostname)",
+          "legendFormat": "{{instance}} - {{hostname}}",
           "refId": "B"
+        },
+        {
+          "expr": "sum(rate(apollo_query_started{job=~\"$job\"}[$interval]))",
+          "legendFormat": "Total",
+          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Requests Per Minute",
+      "title": "Requests Per Second",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -98,7 +781,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "reqps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -111,7 +794,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -126,27 +809,27 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
-      "description": "",
+      "description": "Errors per second for the selected interval.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 9,
         "w": 8,
         "x": 8,
-        "y": 0
+        "y": 5
       },
       "hiddenSeries": false,
       "hideTimeOverride": false,
-      "id": 16,
+      "id": 12,
       "legend": {
-        "alignAsTable": false,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -166,24 +849,29 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(apollo_query_failed{job=~\"$job\", instance=~\"$instance\"}[5m])) * 60",
+          "expr": "sum(rate(apollo_query_failed{job=~\"$job\", instance=~\"$instance\"}[$interval])) by (instance)",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "Total",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(apollo_query_failed{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[5m])) by (hostname) * 60",
-          "legendFormat": "{{hostname}}",
+          "expr": "sum(rate(apollo_query_failed{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$interval])) by (instance, hostname)",
+          "legendFormat": "{{instance}} - {{hostname}}",
           "refId": "B"
+        },
+        {
+          "expr": "sum(rate(apollo_query_failed{job=~\"$job\", instance=~\"$instance\"}[$interval]))",
+          "legendFormat": "Total",
+          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Failures Per Minute",
+      "title": "Errors Per Second",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -199,7 +887,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "reqps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -212,7 +900,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -226,29 +914,32 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "$datasource",
-      "description": "",
+      "description": "Response latency for the selected interval.",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 9,
         "w": 8,
         "x": 16,
-        "y": 0
+        "y": 5
       },
       "hiddenSeries": false,
-      "id": 2,
+      "id": 13,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "options": {
         "dataLinks": []
       },
@@ -262,23 +953,29 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(sum(rate(apollo_query_duration_sum{job=~\"$job\", instance=~\"$instance\"}[$__range])) / sum(rate(apollo_query_duration_count{job=~\"$job\", instance=~\"$instance\"}[$__range])))",
+          "expr": "histogram_quantile(0.95, sum(rate(apollo_query_duration_bucket{job=~\"$job\", instance=~\"$instance\"}[$interval])) by (instance, le))",
           "instant": false,
-          "legendFormat": "Total",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         },
         {
-          "expr": "(sum(rate(apollo_query_duration_sum{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (hostname) / sum(rate(apollo_query_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (hostname))",
+          "expr": "histogram_quantile(0.95, sum(rate(apollo_query_duration_bucket{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$interval])) by (instance, hostname, le))",
           "instant": false,
-          "legendFormat": "{{hostname}}",
+          "legendFormat": "{{instance}} - {{hostname}}",
           "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(apollo_query_duration_bucket{job=~\"$job\"}[$interval])) by (le))",
+          "instant": false,
+          "legendFormat": "Total",
+          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Average Query Duration",
+      "title": "Response Latency",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -294,7 +991,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "s",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -307,7 +1004,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -318,13 +1015,13 @@
     {
       "columns": [],
       "datasource": "$datasource",
-      "description": "Operations with the most RPM",
+      "description": "Top 10 most requested operations.\n\nN/A represents unnamed operations.",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
         "w": 6,
         "x": 0,
-        "y": 7
+        "y": 14
       },
       "id": 14,
       "options": {},
@@ -343,33 +1040,28 @@
           "type": "hidden"
         },
         {
-          "alias": "Operation",
+          "alias": "Operation Name",
           "align": "left",
           "colorMode": null,
           "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
           "decimals": 2,
+          "link": false,
+          "mappingType": 1,
           "pattern": "operationName",
           "thresholds": [],
           "type": "string",
-          "unit": "short"
-        },
-        {
-          "alias": "RPM",
-          "align": "auto",
-          "colorMode": null,
-          "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 10,
-          "mappingType": 1,
-          "pattern": "Value",
-          "thresholds": [],
-          "type": "number",
-          "unit": "none"
+          "unit": "short",
+          "valueMaps": [
+            {
+              "text": "N/A",
+              "value": ""
+            }
+          ]
         }
       ],
       "targets": [
         {
-          "expr": "topk(10, sum(rate(apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", operationName!=\"\"}[$__range])) by (operationName) * 60)",
+          "expr": "topk(10, sum (apollo_query_started{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}) by (operationName))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -377,20 +1069,20 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Highest Request Rate",
+      "title": "Top 10 Operations Count",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
       "datasource": "$datasource",
-      "description": "Operations that failed the most",
+      "description": "Top 10 operations that errored.\n\nN/A represents unnamed operations.",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
         "w": 6,
         "x": 6,
-        "y": 7
+        "y": 14
       },
       "id": 15,
       "options": {},
@@ -409,33 +1101,27 @@
           "type": "hidden"
         },
         {
-          "alias": "Operation",
+          "alias": "Operation Name",
           "align": "left",
           "colorMode": null,
           "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
           "decimals": 2,
+          "mappingType": 1,
           "pattern": "operationName",
           "thresholds": [],
           "type": "string",
-          "unit": "short"
-        },
-        {
-          "alias": "Fails",
-          "align": "auto",
-          "colorMode": null,
-          "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 0,
-          "mappingType": 1,
-          "pattern": "Value",
-          "thresholds": [],
-          "type": "number",
-          "unit": "none"
+          "unit": "short",
+          "valueMaps": [
+            {
+              "text": "N/A",
+              "value": ""
+            }
+          ]
         }
       ],
       "targets": [
         {
-          "expr": "topk(10, sum(apollo_query_failed{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", operationName!=\"\"}) by (operationName))",
+          "expr": "topk(10, sum (apollo_query_failed{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}) by (operationName))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -443,28 +1129,28 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Highest Fail Rate",
+      "title": "Top 10 Errors Count",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
       "datasource": "$datasource",
-      "description": "Top 10 slowest queries",
+      "description": "Top 10 slowest operations.\n\nN/A represents unnamed operations.",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
         "w": 6,
         "x": 12,
-        "y": 7
+        "y": 14
       },
-      "id": 4,
+      "id": 16,
       "options": {},
       "pageSize": null,
       "showHeader": true,
       "sort": {
-        "col": 2,
-        "desc": true
+        "col": null,
+        "desc": false
       },
       "styles": [
         {
@@ -475,33 +1161,46 @@
           "type": "hidden"
         },
         {
-          "alias": "Operation",
+          "alias": "Operation Name",
           "align": "left",
           "colorMode": null,
           "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
           "decimals": 2,
+          "mappingType": 1,
           "pattern": "operationName",
           "thresholds": [],
           "type": "string",
-          "unit": "short"
+          "unit": "short",
+          "valueMaps": [
+            {
+              "text": "N/A",
+              "value": ""
+            }
+          ]
         },
         {
-          "alias": "Duration",
+          "alias": "Average Duration",
           "align": "auto",
           "colorMode": null,
           "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "decimals": 10,
+          "decimals": null,
           "mappingType": 1,
           "pattern": "Value",
           "thresholds": [],
           "type": "number",
-          "unit": "ns"
+          "unit": "s",
+          "valueMaps": [
+            {
+              "text": "",
+              "value": "NaN"
+            }
+          ]
         }
       ],
       "targets": [
         {
-          "expr": "topk(10, sum(rate(apollo_query_duration_sum{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", operationName!=\"\"}[$__range])) by (operationName) / sum(rate(apollo_query_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", operationName!=\"\"}[$__range])) by (operationName))",
+          "expr": "topk(10, sum(rate(apollo_query_duration_sum{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (operationName) / sum(rate(apollo_query_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (operationName))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -509,22 +1208,22 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Slow Queries",
+      "title": "Top 10 Duration Rate",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
       "datasource": "$datasource",
-      "description": "Top 10 fields with the slowest resolutions",
+      "description": "Top 10 fields with the slowest resolutions.",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
         "w": 6,
         "x": 18,
-        "y": 7
+        "y": 14
       },
-      "id": 5,
+      "id": 17,
       "interval": "",
       "options": {},
       "pageSize": null,
@@ -560,11 +1259,11 @@
           "align": "right",
           "colorMode": null,
           "colors": ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-          "decimals": 10,
+          "decimals": null,
           "pattern": "Value",
           "thresholds": [],
           "type": "number",
-          "unit": "ns"
+          "unit": "s"
         },
         {
           "alias": "Parent",
@@ -582,7 +1281,7 @@
       ],
       "targets": [
         {
-          "expr": "topk(10, sum(rate(apollo_query_field_resolution_duration_sum{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (fieldName, parentType) / sum(rate(apollo_query_field_resolution_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[$__range])) by (fieldName, parentType))",
+          "expr": "topk(10, sum(rate(apollo_query_field_resolution_duration_sum{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", parentType!=\"Query\", parentType!=\"Mutation\"}[$__range])) by (fieldName, parentType) / sum(rate(apollo_query_field_resolution_duration_count{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\", parentType!=\"Query\", parentType!=\"Mutation\"}[$__range])) by (fieldName, parentType))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -590,14 +1289,239 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Slow Fields Resolution",
+      "title": "Top 10 Slowest Fields Resolution",
       "transform": "table",
       "type": "table"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 18,
+      "panels": [],
+      "title": "Resources",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$datasource",
+      "description": "CPU usage.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "irate(process_cpu_user_seconds_total{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[1m]) * 100",
+          "legendFormat": "User CPU - {{instance}} - {{hostname}}",
+          "refId": "A"
+        },
+        {
+          "expr": "irate(process_cpu_system_seconds_total{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[1m]) * 100",
+          "legendFormat": "System CPU - {{instance}} - {{hostname}}",
+          "refId": "B"
+        },
+        {
+          "expr": "irate(process_cpu_seconds_total{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}[1m]) * 100",
+          "legendFormat": "Total CPU - {{instance}} - {{hostname}}",
+          "refId": "C"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$datasource",
+      "description": "Memory usage.",
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "process_resident_memory_bytes{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}",
+          "legendFormat": "Process Memory - {{instance}} - {{hostname}}",
+          "refId": "A"
+        },
+        {
+          "expr": "nodejs_heap_size_total_bytes{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}",
+          "legendFormat": "Heap Total - {{instance}} - {{hostname}}",
+          "refId": "B"
+        },
+        {
+          "expr": "nodejs_heap_size_used_bytes{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}",
+          "legendFormat": "Heap Used - {{instance}} - {{hostname}}",
+          "refId": "C"
+        },
+        {
+          "expr": "nodejs_external_memory_bytes{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"}",
+          "legendFormat": "External Memory - {{instance}} - {{hostname}}",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
+  "refresh": "10s",
   "schemaVersion": 22,
   "style": "dark",
-  "tags": [],
+  "tags": ["node.js", "express", "apollo-server", "nodejs", "apollo"],
   "templating": {
     "list": [
       {
@@ -620,8 +1544,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
           "text": "All",
           "value": ["$__all"]
         },
@@ -647,8 +1569,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
           "text": "All",
           "value": ["$__all"]
         },
@@ -674,8 +1594,6 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
           "text": "All",
           "value": ["$__all"]
         },
@@ -697,11 +1615,236 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": false,
+          "text": "1m",
+          "value": "1m"
+        },
+        "hide": 0,
+        "label": "Interval",
+        "name": "interval",
+        "options": [
+          {
+            "selected": true,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "0.05",
+          "value": "0.05"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Request Target",
+        "multi": false,
+        "name": "requestTarget",
+        "options": [
+          {
+            "selected": false,
+            "text": "0.001",
+            "value": "0.001"
+          },
+          {
+            "selected": false,
+            "text": "0.005",
+            "value": "0.005"
+          },
+          {
+            "selected": false,
+            "text": "0.015",
+            "value": "0.015"
+          },
+          {
+            "selected": true,
+            "text": "0.05",
+            "value": "0.05"
+          },
+          {
+            "selected": false,
+            "text": "0.1",
+            "value": "0.1"
+          },
+          {
+            "selected": false,
+            "text": "0.2",
+            "value": "0.2"
+          },
+          {
+            "selected": false,
+            "text": "0.3",
+            "value": "0.3"
+          },
+          {
+            "selected": false,
+            "text": "0.4",
+            "value": "0.4"
+          },
+          {
+            "selected": false,
+            "text": "0.5",
+            "value": "0.5"
+          },
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          }
+        ],
+        "query": "0.001,0.005,0.015,0.05,0.1,0.2,0.3,0.4,0.5,1,5,10",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "0.2",
+          "value": "0.2"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Request Tolerance",
+        "multi": false,
+        "name": "requestTolerance",
+        "options": [
+          {
+            "selected": false,
+            "text": "0.001",
+            "value": "0.001"
+          },
+          {
+            "selected": false,
+            "text": "0.005",
+            "value": "0.005"
+          },
+          {
+            "selected": false,
+            "text": "0.015",
+            "value": "0.015"
+          },
+          {
+            "selected": false,
+            "text": "0.05",
+            "value": "0.05"
+          },
+          {
+            "selected": false,
+            "text": "0.1",
+            "value": "0.1"
+          },
+          {
+            "selected": true,
+            "text": "0.2",
+            "value": "0.2"
+          },
+          {
+            "selected": false,
+            "text": "0.3",
+            "value": "0.3"
+          },
+          {
+            "selected": false,
+            "text": "0.4",
+            "value": "0.4"
+          },
+          {
+            "selected": false,
+            "text": "0.5",
+            "value": "0.5"
+          },
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "5",
+            "value": "5"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          }
+        ],
+        "query": "0.001,0.005,0.015,0.05,0.1,0.2,0.3,0.4,0.5,1,5,10",
+        "skipUrlSync": false,
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-10m",
     "to": "now"
   },
   "timepicker": {
@@ -710,5 +1853,5 @@
   "timezone": "",
   "title": "Apollo Server",
   "uid": "yX2d7k1Gk",
-  "version": 34
+  "version": 1
 }
