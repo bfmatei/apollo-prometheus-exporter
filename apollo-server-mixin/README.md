@@ -9,7 +9,7 @@ $ go get github.com/monitoring-mixins/mixtool/cmd/mixtool
 $ go get github.com/google/go-jsonnet/cmd/jsonnetfmt
 ```
 
-You can then build the Prometheus rules files `alerts.yaml` and `rules.yaml` and a directory `dashboard_out` with the JSON dashboard files for Grafana:
+You can then build the Prometheus rules file `alerts.yaml` and a directory `dashboard_out` with the JSON dashboard files for Grafana:
 
 ```bash
 $ make build
