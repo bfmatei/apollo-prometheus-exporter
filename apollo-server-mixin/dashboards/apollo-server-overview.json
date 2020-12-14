@@ -9,6 +9,31 @@
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
         "type": "dashboard"
+      },
+      {
+        "datasource": "$datasource",
+        "enable": true,
+        "expr": "process_start_time_seconds{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"} * 1000",
+        "hide": false,
+        "iconColor": "#B877D9",
+        "name": "Node.js Start",
+        "showIn": 0,
+        "textFormat": "{{instance}} - {{hostname}}",
+        "titleFormat": "Node.js Start",
+        "useValueForTime": true
+      },
+      {
+        "datasource": "$datasource",
+        "enable": true,
+        "expr": "apollo_server_starting{job=~\"$job\", instance=~\"$instance\", hostname=~\"$hostname\"} * 1000",
+        "hide": false,
+        "iconColor": "#5794F2",
+        "name": "Apollo Server Start",
+        "showIn": 0,
+        "tagKeys": "",
+        "textFormat": "{{hostname}} - {{hostname}}",
+        "titleFormat": "Server Start",
+        "useValueForTime": true
       }
     ]
   },
@@ -17,7 +42,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1607889174049,
+  "iteration": 1607958071603,
   "links": [],
   "panels": [
     {
