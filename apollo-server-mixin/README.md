@@ -1,6 +1,6 @@
 # Apollo Server Mixin
 
-The Apollo Server Mixin is a set of configurable, reusable, and extensible alerts and dashboards based on the metrics exported by the [Apollo Prometheus Exporter Plugin](https://github.com/bfmatei/apollo-prometheus-exporter). The mixin creates recording and alerting rules for Prometheus and suitable dashboard descriptions for Grafana.
+The Apollo Server Mixin is a set of configurable, reusable, and extensible alerts and dashboards based on the metrics exported by the [Apollo Prometheus Exporter Plugin](https://github.com/bfmatei/apollo-prometheus-exporter). The mixin creates alerting rules for Prometheus and suitable dashboard descriptions for Grafana.
 
 To use them, you need to have `mixtool` and `jsonnetfmt` installed. If you have a working Go development environment, it's easiest to run the following:
 

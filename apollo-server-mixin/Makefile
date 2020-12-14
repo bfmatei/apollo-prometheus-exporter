@@ -17,7 +17,8 @@ lint:
 	mixtool lint mixin.libsonnet
 
 build:
-	mixtool generate all mixin.libsonnet
+	mixtool generate alerts -a=alerts.yaml mixin.libsonnet
+	mixtool generate dashboards -d=dashboards_out mixin.libsonnet
 
 clean:
-	rm -rf dashboards_out alerts.yaml rules.yaml
+	rm -rf dashboards_out alerts.yaml
