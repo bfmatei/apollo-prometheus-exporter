@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.1.0...v1.2.0) (2021-03-26)
+
+
+### Features
+
+* add compatibility with prom-client@13 ([027de58](https://github.com/bfmatei/apollo-prometheus-exporter/commit/027de58bf102dbbc6af79c4299971dd2abbf337e))
+* add support for node 12 ([84b1775](https://github.com/bfmatei/apollo-prometheus-exporter/commit/84b17754f2248160e1b92d723bc81e3405e82d9c))
+
 # [1.1.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.0.4...v1.1.0) (2020-12-13)
 
 
