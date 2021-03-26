@@ -3,6 +3,7 @@
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2019"],
     "module": "CommonJS",
     "moduleResolution": "Node",
     "noEmitOnError": true,
@@ -14,6 +15,6 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ES2019"
   }
 }
