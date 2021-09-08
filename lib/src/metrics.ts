@@ -38,8 +38,6 @@ export const queryLabelNames = ['operationName', 'operation'];
 
 export const fieldLabelNames = ['operationName', 'operation', 'fieldName', 'parentType', 'returnType', 'pathLength'];
 
-export const durationHistogramsBuckets = [0.001, 0.005, 0.015, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 5, 10];
-
 export const metricsConfig: MetricConfig[] = [
   {
     name: MetricsNames.SERVER_STARTING,
@@ -112,14 +110,12 @@ export const metricsConfig: MetricConfig[] = [
     help: 'The total duration of a query.',
     type: MetricTypes.HISTOGRAM,
     labelNames: [...queryLabelNames, 'success'],
-    buckets: durationHistogramsBuckets
   },
   {
     name: MetricsNames.QUERY_FIELD_RESOLUTION_DURATION,
     help: 'The total duration for resolving fields.',
     type: MetricTypes.HISTOGRAM,
     labelNames: fieldLabelNames,
-    buckets: durationHistogramsBuckets
   }
 ];
 
@@ -131,7 +127,7 @@ export type Metrics = {
   };
 };
 
-export function generateMetrics(register: Registry, { disabledMetrics }: Context): Metrics {
+export function generateMetrics(register: Registry, { disabledMetrics, durationHistogramsBuckets }: Context): Metrics {
   return metricsConfig.reduce((acc, metric) => {
     const disabled = disabledMetrics.includes(metric.name);
 
@@ -161,7 +157,7 @@ export function generateMetrics(register: Registry, { disabledMetrics }: Context
         case MetricTypes.HISTOGRAM:
           acc[metric.name].instance = new Histogram({
             ...commonConfig,
-            buckets: metric.buckets
+            buckets: durationHistogramsBuckets
           });
           break;
       }
