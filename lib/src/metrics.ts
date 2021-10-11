@@ -1,6 +1,68 @@
-import { Counter, Gauge, Histogram, Metric, Registry } from 'prom-client';
+import {
+  BaseContext,
+  GraphQLRequestContext,
+  GraphQLRequestContextDidEncounterErrors,
+  GraphQLRequestContextDidResolveOperation,
+  GraphQLRequestContextExecutionDidStart,
+  GraphQLRequestContextParsingDidStart,
+  GraphQLRequestContextValidationDidStart,
+  GraphQLRequestContextWillSendResponse
+} from 'apollo-server-plugin-base';
+import { GraphQLFieldResolverParams } from 'apollo-server-types';
+import { Counter, Gauge, Histogram, LabelValues, Metric, Registry } from 'prom-client';
 
-import { Context } from './context';
+import { AppContext, Args, Context, Source } from './context';
+
+export interface ServerLabels extends LabelValues<string> {
+  version: string;
+}
+
+export interface QueryLabels extends LabelValues<string> {
+  operationName?: string;
+  operation?: string;
+}
+
+export interface QueryDurationLabels extends QueryLabels {
+  success: 'true' | 'false';
+}
+
+export interface FieldLabels extends QueryLabels {
+  fieldName: string;
+  parentType: string;
+  pathLength: string;
+  returnType?: string;
+}
+
+export type ContextTypes<C extends BaseContext = BaseContext> =
+  | GraphQLRequestContext<C>
+  | GraphQLRequestContextParsingDidStart<C>
+  | GraphQLRequestContextValidationDidStart<C>
+  | GraphQLRequestContextDidResolveOperation<C>
+  | GraphQLRequestContextExecutionDidStart<C>
+  | GraphQLRequestContextDidEncounterErrors<C>
+  | GraphQLRequestContextWillSendResponse<C>;
+
+export type FieldTypes<S = any, BC = BaseContext, A = { [p: string]: any }> = GraphQLFieldResolverParams<S, BC, A>;
+
+export interface SkipFn<L extends LabelValues<string> = LabelValues<string>> {
+  (labels: L): boolean;
+}
+
+export interface SkipFnWithContext<
+  L extends LabelValues<string> = LabelValues<string>,
+  C extends BaseContext = BaseContext
+> {
+  (labels: L, context: ContextTypes<C>): boolean;
+}
+
+export interface SkipFnWithField<
+  L extends LabelValues<string> = LabelValues<string>,
+  C extends BaseContext = BaseContext,
+  S = any,
+  A = { [p: string]: any }
+> {
+  (labels: L, context: ContextTypes<C>, field: FieldTypes<S, C, A>): boolean;
+}
 
 export enum MetricsNames {
   SERVER_STARTING = 'apollo_server_starting',
@@ -28,7 +90,7 @@ export interface MetricConfig {
   name: MetricsNames;
   help: string;
   type: MetricTypes;
-  labelNames?: string[];
+  labelNames: string[];
 }
 
 export const serverLabelNames = ['version'];
@@ -121,45 +183,44 @@ export const metricsConfig: MetricConfig[] = [
 export type Metrics = {
   [metricName in MetricsNames]: {
     type: MetricTypes;
-    disabled: boolean;
+    skip: SkipFn | SkipFnWithContext | SkipFnWithField;
     instance: Metric<string> | null;
   };
 };
 
-export function generateMetrics(register: Registry, { disabledMetrics, durationHistogramsBuckets }: Context): Metrics {
+export function generateMetrics<C = AppContext, S = Source, A = Args>(
+  register: Registry,
+  { durationHistogramsBuckets, skipMetrics }: Context<C, S, A>
+): Metrics {
   return metricsConfig.reduce((acc, metric) => {
-    const disabled = disabledMetrics.includes(metric.name);
-
     acc[metric.name] = {
       type: metric.type,
-      disabled,
+      skip: skipMetrics[metric.name] as SkipFn | SkipFnWithContext | SkipFnWithField,
       instance: null
     };
 
-    if (!disabled) {
-      const commonConfig = {
-        name: metric.name,
-        help: metric.help,
-        labelNames: metric.labelNames,
-        registers: [register]
-      };
+    const commonConfig = {
+      name: metric.name,
+      help: metric.help,
+      labelNames: metric.labelNames,
+      registers: [register]
+    };
 
-      switch (metric.type) {
-        case MetricTypes.GAUGE:
-          acc[metric.name].instance = new Gauge(commonConfig);
-          break;
+    switch (metric.type) {
+      case MetricTypes.GAUGE:
+        acc[metric.name].instance = new Gauge(commonConfig);
+        break;
 
-        case MetricTypes.COUNTER:
-          acc[metric.name].instance = new Counter(commonConfig);
-          break;
+      case MetricTypes.COUNTER:
+        acc[metric.name].instance = new Counter(commonConfig);
+        break;
 
-        case MetricTypes.HISTOGRAM:
-          acc[metric.name].instance = new Histogram({
-            ...commonConfig,
-            buckets: durationHistogramsBuckets
-          });
-          break;
-      }
+      case MetricTypes.HISTOGRAM:
+        acc[metric.name].instance = new Histogram({
+          ...commonConfig,
+          buckets: durationHistogramsBuckets
+        });
+        break;
     }
 
     return acc;

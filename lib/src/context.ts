@@ -1,9 +1,61 @@
+import {
+  BaseContext,
+  GraphQLRequestContext,
+  GraphQLRequestContextDidEncounterErrors,
+  GraphQLRequestContextDidResolveOperation,
+  GraphQLRequestContextExecutionDidStart,
+  GraphQLRequestContextParsingDidStart,
+  GraphQLRequestContextValidationDidStart,
+  GraphQLRequestContextWillSendResponse
+} from 'apollo-server-plugin-base';
+import { GraphQLFieldResolverParams } from 'apollo-server-types';
 import { Express } from 'express';
 import { DefaultMetricsCollectorConfiguration, LabelValues, register, Registry } from 'prom-client';
 
-import { MetricsNames } from './metrics';
+import {
+  FieldLabels,
+  MetricsNames,
+  QueryDurationLabels,
+  QueryLabels,
+  ServerLabels,
+  SkipFn,
+  SkipFnWithContext,
+  SkipFnWithField
+} from './metrics';
+import { PluginOptions } from './plugin';
 
-export interface Context {
+export type AppContext = BaseContext;
+
+export type Source = any;
+
+export interface Args {
+  [p: string]: any;
+}
+
+export interface SkipMetricsMap<C = AppContext, S = Source, A = Args> {
+  [MetricsNames.SERVER_STARTING]: SkipFn<ServerLabels>;
+  [MetricsNames.SERVER_CLOSING]: SkipFn<ServerLabels>;
+  [MetricsNames.QUERY_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContext<C>>;
+  [MetricsNames.QUERY_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextDidEncounterErrors<C>>;
+  [MetricsNames.QUERY_PARSE_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextParsingDidStart<C>>;
+  [MetricsNames.QUERY_PARSE_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextParsingDidStart<C>>;
+  [MetricsNames.QUERY_VALIDATION_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextValidationDidStart<C>>;
+  [MetricsNames.QUERY_VALIDATION_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextValidationDidStart<C>>;
+  [MetricsNames.QUERY_RESOLVED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextDidResolveOperation<C>>;
+  [MetricsNames.QUERY_EXECUTION_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextExecutionDidStart<C>>;
+  [MetricsNames.QUERY_EXECUTION_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextExecutionDidStart<C>>;
+  [MetricsNames.QUERY_DURATION]: SkipFnWithContext<
+    QueryDurationLabels,
+    GraphQLRequestContextDidEncounterErrors<C> | GraphQLRequestContextWillSendResponse<C>
+  >;
+  [MetricsNames.QUERY_FIELD_RESOLUTION_DURATION]: SkipFnWithField<
+    FieldLabels,
+    GraphQLRequestContextExecutionDidStart<C>,
+    GraphQLFieldResolverParams<S, C, A>
+  >;
+}
+
+export interface Context<C = AppContext, S = Source, A = Args> {
   app: Express;
   defaultLabels: LabelValues<string>;
   defaultMetrics: boolean;
@@ -15,10 +67,13 @@ export interface Context {
   metricsEndpoint: boolean;
   metricsEndpointPath: string;
   register: Registry;
+  skipMetrics: SkipMetricsMap<C, S, A>;
 }
 
-export function generateContext(options: Partial<Context>): Context {
-  const context: Context = {
+export function generateContext<C = BaseContext, S = Source, A = Args>(
+  options: PluginOptions<C, S, A>
+): Context<C, S, A> {
+  const context: Context<C, S, A> = {
     app: options.app as Express,
     defaultLabels: {},
     defaultMetrics: true,
@@ -30,6 +85,22 @@ export function generateContext(options: Partial<Context>): Context {
     metricsEndpointPath: '/metrics',
     register,
     ...options,
+    skipMetrics: {
+      [MetricsNames.SERVER_STARTING]: () => false,
+      [MetricsNames.SERVER_CLOSING]: () => false,
+      [MetricsNames.QUERY_STARTED]: () => false,
+      [MetricsNames.QUERY_FAILED]: () => false,
+      [MetricsNames.QUERY_PARSE_STARTED]: () => false,
+      [MetricsNames.QUERY_PARSE_FAILED]: () => false,
+      [MetricsNames.QUERY_VALIDATION_STARTED]: () => false,
+      [MetricsNames.QUERY_VALIDATION_FAILED]: () => false,
+      [MetricsNames.QUERY_RESOLVED]: () => false,
+      [MetricsNames.QUERY_EXECUTION_STARTED]: () => false,
+      [MetricsNames.QUERY_EXECUTION_FAILED]: () => false,
+      [MetricsNames.QUERY_DURATION]: () => false,
+      [MetricsNames.QUERY_FIELD_RESOLUTION_DURATION]: () => false,
+      ...(options.skipMetrics ?? {})
+    },
     defaultMetricsOptions: {
       register,
       ...(options.defaultMetricsOptions ?? {})
@@ -60,5 +131,5 @@ export function generateContext(options: Partial<Context>): Context {
     throw new Error('durationHistogramsBuckets option must not be empty');
   }
 
-  return context as Context;
+  return context;
 }

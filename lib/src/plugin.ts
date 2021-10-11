@@ -1,14 +1,27 @@
-import { ApolloServerPlugin } from 'apollo-server-plugin-base';
+import { ApolloServerPlugin, BaseContext } from 'apollo-server-plugin-base';
 import { hostname } from 'os';
 import { collectDefaultMetrics, Registry } from 'prom-client';
 
-import { Context, generateContext } from './context';
+import { AppContext, Args, Context, generateContext, SkipMetricsMap as ContextSkipMetricsMap, Source } from './context';
 import { registerEndpoint } from './endpoint';
 import { filterLabels } from './helpers';
 import { generateHooks } from './hooks';
 import { generateMetrics } from './metrics';
 
-export function toggleDefaultMetrics(register: Registry, { defaultMetrics, defaultMetricsOptions }: Context) {
+export type SkipMetricsMap<C extends BaseContext = BaseContext, S = any, A = { [p: string]: any }> = Partial<
+  ContextSkipMetricsMap<C, S, A>
+>;
+
+export type PluginOptions<C extends BaseContext = BaseContext, S = any, A = { [p: string]: any }> = Partial<
+  Omit<Context, 'skipMetrics'> & {
+    skipMetrics: SkipMetricsMap<C, S, A>;
+  }
+>;
+
+export function toggleDefaultMetrics<C = AppContext, S = Source, A = Args>(
+  register: Registry,
+  { defaultMetrics, defaultMetricsOptions }: Context<C, S, A>
+) {
   if (defaultMetrics) {
     collectDefaultMetrics({
       register,
@@ -17,7 +30,10 @@ export function toggleDefaultMetrics(register: Registry, { defaultMetrics, defau
   }
 }
 
-export function setDefaultLabels(register: Registry, { defaultLabels, hostnameLabel, hostnameLabelName }: Context) {
+export function setDefaultLabels<C = AppContext, S = Source, A = Args>(
+  register: Registry,
+  { defaultLabels, hostnameLabel, hostnameLabelName }: Context<C, S, A>
+) {
   const labels = filterLabels({
     ...defaultLabels,
     [hostnameLabelName]: hostnameLabel ? hostname() : undefined
@@ -26,7 +42,10 @@ export function setDefaultLabels(register: Registry, { defaultLabels, hostnameLa
   register.setDefaultLabels(labels);
 }
 
-export function toggleEndpoint(register: Registry, { metricsEndpoint, app, metricsEndpointPath }: Context) {
+export function toggleEndpoint<C = AppContext, S = Source, A = Args>(
+  register: Registry,
+  { metricsEndpoint, app, metricsEndpointPath }: Context<C, S, A>
+) {
   if (metricsEndpoint) {
     registerEndpoint({
       app: app,
@@ -36,10 +55,10 @@ export function toggleEndpoint(register: Registry, { metricsEndpoint, app, metri
   }
 }
 
-export type PluginOptions = Partial<Context>;
-
-export function createPlugin(options: PluginOptions): ApolloServerPlugin {
-  const context = generateContext(options);
+export function createPlugin<C = AppContext, S = Source, A = Args>(
+  options: PluginOptions<C, S, A>
+): ApolloServerPlugin {
+  const context = generateContext<C, S, A>(options);
   const register = context.register;
 
   toggleDefaultMetrics(register, context);
