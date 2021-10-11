@@ -6,7 +6,7 @@ import { createPrometheusExporterPlugin } from '../../lib/src';
 import { readSchema } from './read-schema';
 import { resolvers } from './resolvers';
 
-export function startServer(port: number = 4000, hostname: string = '0.0.0.0') {
+export async function startServer(port: number = 4000, hostname: string = '0.0.0.0') {
   const app = express();
 
   const typeDefs = readSchema();
@@ -20,6 +20,8 @@ export function startServer(port: number = 4000, hostname: string = '0.0.0.0') {
     resolvers,
     plugins: [prometheusExporterPlugin]
   });
+
+  await server.start();
 
   server.applyMiddleware({ app, path: '/' });
 

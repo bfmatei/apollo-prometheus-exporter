@@ -63,7 +63,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
   };
 
   return {
-    serverWillStart() {
+    async serverWillStart() {
       const version = getApolloServerVersion();
 
       actionMetric(
@@ -75,7 +75,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
       );
 
       return {
-        serverWillStop() {
+        async serverWillStop() {
           actionMetric(
             MetricsNames.SERVER_CLOSING,
             {
@@ -87,41 +87,41 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
       };
     },
 
-    requestDidStart(requestContext) {
+    async requestDidStart(requestContext) {
       const requestStartDate = Date.now();
 
       actionMetric(MetricsNames.QUERY_STARTED, getLabelsFromContext(requestContext));
 
       return {
-        parsingDidStart(context) {
+        async parsingDidStart(context) {
           actionMetric(MetricsNames.QUERY_PARSE_STARTED, getLabelsFromContext(context));
 
-          return (err) => {
+          return async (err) => {
             if (err) {
               actionMetric(MetricsNames.QUERY_PARSE_FAILED, getLabelsFromContext(context));
             }
           };
         },
 
-        validationDidStart(context) {
+        async validationDidStart(context) {
           actionMetric(MetricsNames.QUERY_VALIDATION_STARTED, getLabelsFromContext(context));
 
-          return (err) => {
+          return async (err) => {
             if (err) {
               actionMetric(MetricsNames.QUERY_VALIDATION_FAILED, getLabelsFromContext(context));
             }
           };
         },
 
-        didResolveOperation(context) {
+        async didResolveOperation(context) {
           actionMetric(MetricsNames.QUERY_RESOLVED, getLabelsFromContext(context));
         },
 
-        executionDidStart(context) {
+        async executionDidStart(context) {
           actionMetric(MetricsNames.QUERY_EXECUTION_STARTED, getLabelsFromContext(context));
 
           return {
-            willResolveField(field) {
+            willResolveField(field: GraphQLFieldResolverParams<any, any>) {
               const fieldResolveStart = Date.now();
 
               return () => {
@@ -137,7 +137,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
                 );
               };
             },
-            executionDidEnd(err) {
+            async executionDidEnd(err) {
               if (err) {
                 actionMetric(MetricsNames.QUERY_EXECUTION_FAILED, getLabelsFromContext(context));
               }
@@ -145,7 +145,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           };
         },
 
-        didEncounterErrors(context) {
+        async didEncounterErrors(context) {
           const requestEndDate = Date.now();
 
           actionMetric(MetricsNames.QUERY_FAILED, getLabelsFromContext(context));
@@ -160,7 +160,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           );
         },
 
-        willSendResponse(context) {
+        async willSendResponse(context) {
           const requestEndDate = Date.now();
 
           if ((context.errors?.length ?? 0) === 0) {
