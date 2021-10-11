@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.2.0...v2.0.0) (2021-10-11)
+
+
+### Features
+
+* release exporter for Apollo Server 3 ([ca95a3e](https://github.com/bfmatei/apollo-prometheus-exporter/commit/ca95a3e787233076c484444b989b5c3ed473e80d))
+
+
+### BREAKING CHANGES
+
+* use v1 for Apollo Server 2 and v2 for Apollo Server 3
+
 # [1.2.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.1.0...v1.2.0) (2021-03-26)
 
 
