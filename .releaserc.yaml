@@ -1,3 +1,8 @@
+branches:
+  - - name: 1.x
+    - range: 1.x
+    - channel: 1.x
+  - - name: main
 plugins:
   - '@semantic-release/commit-analyzer'
   - '@semantic-release/release-notes-generator'
