@@ -7,6 +7,9 @@ Plugin for Apollo Server to export metrics in Prometheus format.
 
 It uses [prom-client](https://github.com/siimon/prom-client) under the hood the export the metrics.
 
+Since Apollo Server released a new major version, a new version (v2.x.y) of the exporter has been launched. Apollo
+Server v2 is still supported in v1.x.y. The two versions will be features-matched as much as possible.
+
 ## Metrics
 
 | Name                                     | Description                                             | Type      |
