@@ -15,7 +15,7 @@ Server v2 is still supported in v1.x.y. The two versions will be features-matche
 | Name                                     | Description                                             | Type      |
 | ---------------------------------------- | ------------------------------------------------------- | --------- |
 | `apollo_server_starting`                 | The last timestamp when Apollo Server was starting.     | Gauge     |
-| `apollo_server_closing`                  | The amount timestamp when Apollo Server was closing.    | Gauge     |
+| `apollo_server_closing`                  | The last timestamp when Apollo Server was closing.      | Gauge     |
 | `apollo_query_started`                   | The amount of received queries.                         | Counter   |
 | `apollo_query_failed`                    | The amount of queries that failed.                      | Counter   |
 | `apollo_query_parse_started`             | The amount of queries for which parsing has started.    | Counter   |
@@ -58,18 +58,19 @@ For a complete working example, please have a look over the `example` project in
 
 ## Options
 
-| Name                    | Description                                                                                                                                                  | Type                                   | Default Value |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | ------------- |
-| `app`                   | Express instance. For the moment it is used for defining the metrics endpoint. It is mandatory unless `metricsEndpoint` is set to false.                     | `Express`                              | `undefined`   |
-| `defaultLabels`         | An object containing default labels to be sent with each metric.                                                                                             | `Object`                               | `{}`          |
-| `defaultMetrics`        | Flag to enable/disable the default metrics registered by `prom-client`.                                                                                      | `Boolean`                              | `true`        |
-| `defaultMetricsOptions` | Configuration object for the default metrics.                                                                                                                | `DefaultMetricsCollectorConfiguration` | `{}`          |
-| `disabledMetrics`       | A list of metrics to be skipped.                                                                                                                             | `MetricsNames[]`                       | `[]`          |
-| `hostnameLabel`         | Flag to enable/disable `hostname` label.                                                                                                                     | `Boolean`                              | `true`        |
-| `hostnameLabelName`     | The name of the `hostname` label.                                                                                                                            | `String`                               | `hostname`    |
-| `metricsEndpoint`       | Flag to enable/disable the metrics endpoint. If you disable this, you can use the `registerPrometheusMetricsEndpoint` method to enable the metrics endpoint. | `Boolean`                              | `true`        |
-| `metricsEndpointPath`   | HTTP path where the metrics will be published.                                                                                                               | `String`                               | `"/metrics"`  |
-| `register`              | Prometheus client registry to be used by Apollo Metrics. By default, it is also used by the default metrics.                                                 | `Registry`                             | `register`    |
+| Name                       | Description                                                                                                                                                  | Type                                   | Default Value                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | ---------------------------------------------------------------- |
+| `app`                      | Express instance. For the moment it is used for defining the metrics endpoint. It is mandatory unless `metricsEndpoint` is set to false.                     | `Express`                              | `undefined`                                                      |
+| `defaultLabels`            | An object containing default labels to be sent with each metric.                                                                                             | `Object`                               | `{}`                                                             |
+| `defaultMetrics`           | Flag to enable/disable the default metrics registered by `prom-client`.                                                                                      | `Boolean`                              | `true`                                                           |
+| `defaultMetricsOptions`    | Configuration object for the default metrics.                                                                                                                | `DefaultMetricsCollectorConfiguration` | `{}`                                                             |
+| `disabledMetrics`          | A list of metrics to be skipped.                                                                                                                             | `MetricsNames[]`                       | `[]`                                                             |
+| `durationHistogramBuckets` | A list of durations that should be used by histograms.                                                                                                       | `number[]`                             | `[0.001, 0.005, 0.015, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1, 5, 10]` |
+| `hostnameLabel`            | Flag to enable/disable `hostname` label.                                                                                                                     | `Boolean`                              | `true`                                                           |
+| `hostnameLabelName`        | The name of the `hostname` label.                                                                                                                            | `String`                               | `hostname`                                                       |
+| `metricsEndpoint`          | Flag to enable/disable the metrics endpoint. If you disable this, you can use the `registerPrometheusMetricsEndpoint` method to enable the metrics endpoint. | `Boolean`                              | `true`                                                           |
+| `metricsEndpointPath`      | HTTP path where the metrics will be published.                                                                                                               | `String`                               | `"/metrics"`                                                     |
+| `register`                 | Prometheus client registry to be used by Apollo Metrics. By default, it is also used by the default metrics.                                                 | `Registry`                             | `register`                                                       |
 
 ## Thanks
 
