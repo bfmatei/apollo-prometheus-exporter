@@ -1,3 +1,11 @@
+# [2.1.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v2.0.0...v2.1.0) (2021-10-11)
+
+
+### Features
+
+* add support for customizable buckets for histograms ([da6528c](https://github.com/bfmatei/apollo-prometheus-exporter/commit/da6528c68f3152400e88587226ca8676419e79c7))
+* implement skipMetrics ([7547122](https://github.com/bfmatei/apollo-prometheus-exporter/commit/75471224166a0fb989b38b7ab07885e9864a1735))
+
 # [2.0.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.2.0...v2.0.0) (2021-10-11)
 
 
