@@ -15,6 +15,6 @@
   "homepage": "https://github.com/bfmatei/apollo-prometheus-exporter#readme",
   "repository": "github:bfmatei/apollo-prometheus-exporter",
   "peerDependencies": {
-    "prom-client": "^12.0.0 || ^13.0.0"
+    "prom-client": "^12.0.0 || ^13.0.0 || ^14.0.0"
   }
 }
