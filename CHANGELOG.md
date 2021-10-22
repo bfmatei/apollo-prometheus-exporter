@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.3.0...v1.3.1) (2021-10-22)
+
+
+### Bug Fixes
+
+* **lib:** add support for prom-client 14 ([2d0202f](https://github.com/bfmatei/apollo-prometheus-exporter/commit/2d0202f6c65568728b6ba1ab60c35370c9546a11))
+
 # [1.3.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v1.2.0...v1.3.0) (2021-10-11)
 
 
