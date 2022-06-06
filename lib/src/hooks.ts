@@ -1,4 +1,3 @@
-import apolloPackageJson from 'apollo-server-express/package.json';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLFieldResolverParams } from 'apollo-server-types';
 import { Path } from 'graphql/jsutils/Path';
@@ -26,7 +25,11 @@ export function countFieldAncestors(path: Path | undefined): string {
 }
 
 export function getApolloServerVersion(): string | undefined {
-  return apolloPackageJson.version ? `v${apolloPackageJson.version}` : undefined;
+  try {
+    const apolloPackageJson = require('apollo-server-express/package.json');
+    return apolloPackageJson.version ? `v${apolloPackageJson.version}` : undefined;
+  } catch (err) {}
+  return undefined;
 }
 
 export function getLabelsFromFieldResolver({
