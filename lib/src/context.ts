@@ -66,6 +66,7 @@ export interface Context<C = AppContext, S = Source, A = Args> {
   hostnameLabelName: string;
   metricsEndpoint: boolean;
   metricsEndpointPath: string;
+  prefix: string;
   register: Registry;
   skipMetrics: SkipMetricsMap<C, S, A>;
 }
@@ -83,6 +84,7 @@ export function generateContext<C = BaseContext, S = Source, A = Args>(
     hostnameLabelName: 'hostname',
     metricsEndpoint: true,
     metricsEndpointPath: '/metrics',
+    prefix: '',
     register,
     ...options,
     skipMetrics: {

@@ -190,7 +190,7 @@ export type Metrics = {
 
 export function generateMetrics<C = AppContext, S = Source, A = Args>(
   register: Registry,
-  { durationHistogramsBuckets, skipMetrics }: Context<C, S, A>
+  { durationHistogramsBuckets, skipMetrics, prefix }: Context<C, S, A>
 ): Metrics {
   return metricsConfig.reduce((acc, metric) => {
     acc[metric.name] = {
@@ -200,7 +200,7 @@ export function generateMetrics<C = AppContext, S = Source, A = Args>(
     };
 
     const commonConfig = {
-      name: metric.name,
+      name: prefix + metric.name,
       help: metric.help,
       labelNames: metric.labelNames,
       registers: [register]
