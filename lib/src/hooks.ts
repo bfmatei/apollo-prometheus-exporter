@@ -1,4 +1,4 @@
-import apolloPackageJson from 'apollo-server-express/package.json';
+import apolloPackageJson from 'apollo-server-core/package.json';
 import { ApolloServerPlugin } from 'apollo-server-plugin-base';
 import { GraphQLFieldResolverParams } from 'apollo-server-types';
 import { Path } from 'graphql/jsutils/Path';
