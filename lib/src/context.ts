@@ -70,7 +70,7 @@ export interface Context<C = AppContext, S = Source, A = Args> {
   skipMetrics: SkipMetricsMap<C, S, A>;
 }
 
-export function generateContext<C = BaseContext, S = Source, A = Args>(
+export function generateContext<C extends AppContext = BaseContext, S = Source, A = Args>(
   options: PluginOptions<C, S, A>
 ): Context<C, S, A> {
   const context: Context<C, S, A> = {
