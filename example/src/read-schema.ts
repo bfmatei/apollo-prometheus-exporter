@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from 'graphql-tag';
 import { readFileSync } from 'fs';
 import { DocumentNode } from 'graphql';
 import { resolve } from 'path';
