@@ -6,9 +6,9 @@ import {
   GraphQLRequestContextExecutionDidStart,
   GraphQLRequestContextParsingDidStart,
   GraphQLRequestContextValidationDidStart,
-  GraphQLRequestContextWillSendResponse
-} from 'apollo-server-plugin-base';
-import { GraphQLFieldResolverParams } from 'apollo-server-types';
+  GraphQLRequestContextWillSendResponse,
+  GraphQLFieldResolverParams
+} from '@apollo/server';
 import { Express } from 'express';
 import { DefaultMetricsCollectorConfiguration, LabelValues, register, Registry } from 'prom-client';
 
@@ -32,7 +32,7 @@ export interface Args {
   [p: string]: any;
 }
 
-export interface SkipMetricsMap<C = AppContext, S = Source, A = Args> {
+export interface SkipMetricsMap<C extends BaseContext = AppContext, S = Source, A = Args> {
   [MetricsNames.SERVER_STARTING]: SkipFn<ServerLabels>;
   [MetricsNames.SERVER_CLOSING]: SkipFn<ServerLabels>;
   [MetricsNames.QUERY_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContext<C>>;
@@ -55,7 +55,7 @@ export interface SkipMetricsMap<C = AppContext, S = Source, A = Args> {
   >;
 }
 
-export interface Context<C = AppContext, S = Source, A = Args> {
+export interface Context<C extends BaseContext = AppContext, S = Source, A = Args> {
   app: Express;
   defaultLabels: LabelValues<string>;
   defaultMetrics: boolean;
@@ -70,7 +70,7 @@ export interface Context<C = AppContext, S = Source, A = Args> {
   skipMetrics: SkipMetricsMap<C, S, A>;
 }
 
-export function generateContext<C = BaseContext, S = Source, A = Args>(
+export function generateContext<C extends AppContext = BaseContext, S = Source, A = Args>(
   options: PluginOptions<C, S, A>
 ): Context<C, S, A> {
   const context: Context<C, S, A> = {

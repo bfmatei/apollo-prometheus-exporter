@@ -1,6 +1,4 @@
-import apolloPackageJson from 'apollo-server-express/package.json';
-import { ApolloServerPlugin } from 'apollo-server-plugin-base';
-import { GraphQLFieldResolverParams } from 'apollo-server-types';
+import { ApolloServerPlugin, GraphQLFieldResolverParams } from '@apollo/server';
 import { Path } from 'graphql/jsutils/Path';
 import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
 
@@ -26,7 +24,7 @@ export function countFieldAncestors(path: Path | undefined): string {
 }
 
 export function getApolloServerVersion(): string | undefined {
-  return apolloPackageJson.version ? `v${apolloPackageJson.version}` : undefined;
+  return undefined;
 }
 
 export function getLabelsFromFieldResolver({

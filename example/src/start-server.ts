@@ -1,5 +1,7 @@
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
 import express from 'express';
+import { json } from 'body-parser';
 
 import { createPrometheusExporterPlugin } from '../../lib/src';
 
@@ -23,7 +25,7 @@ export async function startServer(port: number = 4000, hostname: string = '0.0.0
 
   await server.start();
 
-  server.applyMiddleware({ app, path: '/' });
+  app.use('/', json(), expressMiddleware(server));
 
   try {
     app.listen(port, hostname, () => {

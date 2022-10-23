@@ -6,9 +6,9 @@ import {
   GraphQLRequestContextExecutionDidStart,
   GraphQLRequestContextParsingDidStart,
   GraphQLRequestContextValidationDidStart,
-  GraphQLRequestContextWillSendResponse
-} from 'apollo-server-plugin-base';
-import { GraphQLFieldResolverParams } from 'apollo-server-types';
+  GraphQLRequestContextWillSendResponse,
+  GraphQLFieldResolverParams
+} from '@apollo/server';
 import { Counter, Gauge, Histogram, LabelValues, Metric, Registry } from 'prom-client';
 
 import { AppContext, Args, Context, Source } from './context';
@@ -188,7 +188,7 @@ export type Metrics = {
   };
 };
 
-export function generateMetrics<C = AppContext, S = Source, A = Args>(
+export function generateMetrics<C extends BaseContext = AppContext, S = Source, A = Args>(
   register: Registry,
   { durationHistogramsBuckets, skipMetrics }: Context<C, S, A>
 ): Metrics {
