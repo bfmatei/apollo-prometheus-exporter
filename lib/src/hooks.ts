@@ -1,6 +1,5 @@
-import apolloPackageJson from 'apollo-server-express/package.json';
-import { ApolloServerPlugin } from 'apollo-server-plugin-base';
-import { GraphQLFieldResolverParams } from 'apollo-server-types';
+import apolloPackageJson, { ApolloServer } from '@apollo/server';
+import { ApolloServerPlugin, GraphQLFieldResolverParams } from '@apollo/server';
 import { Path } from 'graphql/jsutils/Path';
 import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
 
@@ -25,9 +24,9 @@ export function countFieldAncestors(path: Path | undefined): string {
   return counter.toString();
 }
 
-export function getApolloServerVersion(): string | undefined {
-  return apolloPackageJson.version ? `v${apolloPackageJson.version}` : undefined;
-}
+// export function getApolloServerVersion(): string | undefined {
+//   // return apolloPackageJson;
+// }
 
 export function getLabelsFromFieldResolver({
   info: { fieldName, parentType, path, returnType }
@@ -75,8 +74,8 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
 
   return {
     async serverWillStart() {
-      const version = getApolloServerVersion();
-
+      const version = '4.5.0';
+      //hardcoded for testing
       actionMetric({
         name: MetricsNames.SERVER_STARTING,
         labels: {

@@ -35,6 +35,9 @@
     "lib:copy-assets": "copyfiles -f lib/package.json README.md dist",
     "lib:release": "semantic-release"
   },
+  "dependencies": {
+    "@apollo/server": "4.5.0"
+  },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.2.1",
     "@graphql-codegen/typescript": "^2.2.4",
