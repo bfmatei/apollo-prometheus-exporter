@@ -1,4 +1,5 @@
 # Apollo Prometheus Exporter
+Forked from https://github.com/bfmatei/apollo-prometheus-exporter
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bfmatei/apollo-prometheus-exporter/Release)
 ![npm](https://img.shields.io/npm/v/@bmatei/apollo-prometheus-exporter)
