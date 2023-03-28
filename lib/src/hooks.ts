@@ -1,4 +1,4 @@
-import apolloPackageJson, { ApolloServer } from '@apollo/server';
+// import apolloPackageJson, { ApolloServer } from '@apollo/server';
 import { ApolloServerPlugin, GraphQLFieldResolverParams } from '@apollo/server';
 import { Path } from 'graphql/jsutils/Path';
 import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
