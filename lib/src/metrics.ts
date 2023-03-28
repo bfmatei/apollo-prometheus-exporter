@@ -6,9 +6,9 @@ import {
   GraphQLRequestContextExecutionDidStart,
   GraphQLRequestContextParsingDidStart,
   GraphQLRequestContextValidationDidStart,
-  GraphQLRequestContextWillSendResponse
-} from 'apollo-server-plugin-base';
-import { GraphQLFieldResolverParams } from 'apollo-server-types';
+  GraphQLRequestContextWillSendResponse,
+  GraphQLFieldResolverParams
+} from '@apollo/server';
 import { Counter, Gauge, Histogram, LabelValues, Metric, Registry } from 'prom-client';
 
 import { AppContext, Args, Context, Source } from './context';

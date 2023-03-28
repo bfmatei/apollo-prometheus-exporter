@@ -1,4 +1,4 @@
-import { ApolloServerPlugin, BaseContext } from 'apollo-server-plugin-base';
+import { ApolloServerPlugin, BaseContext } from '@apollo/server';
 import { hostname } from 'os';
 import { collectDefaultMetrics, Registry } from 'prom-client';
 
@@ -55,7 +55,7 @@ export function toggleEndpoint<C = AppContext, S = Source, A = Args>(
   }
 }
 
-export function createPlugin<C = AppContext, S = Source, A = Args>(
+export function createPlugin<C extends BaseContext = AppContext, S = Source, A = Args>(
   options: PluginOptions<C, S, A>
 ): ApolloServerPlugin {
   const context = generateContext<C, S, A>(options);
