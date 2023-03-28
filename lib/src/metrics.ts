@@ -188,7 +188,7 @@ export type Metrics = {
   };
 };
 
-export function generateMetrics<C = AppContext, S = Source, A = Args>(
+export function generateMetrics<C extends BaseContext = AppContext, S = Source, A = Args>(
   register: Registry,
   { durationHistogramsBuckets, skipMetrics }: Context<C, S, A>
 ): Metrics {
