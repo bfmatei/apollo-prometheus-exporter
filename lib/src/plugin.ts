@@ -18,7 +18,7 @@ export type PluginOptions<C extends BaseContext = BaseContext, S = any, A = { [p
   }
 >;
 
-export function toggleDefaultMetrics<C = AppContext, S = Source, A = Args>(
+export function toggleDefaultMetrics<C extends BaseContext = AppContext, S = Source, A = Args>(
   register: Registry,
   { defaultMetrics, defaultMetricsOptions }: Context<C, S, A>
 ) {
@@ -30,7 +30,7 @@ export function toggleDefaultMetrics<C = AppContext, S = Source, A = Args>(
   }
 }
 
-export function setDefaultLabels<C = AppContext, S = Source, A = Args>(
+export function setDefaultLabels<C extends BaseContext = AppContext, S = Source, A = Args>(
   register: Registry,
   { defaultLabels, hostnameLabel, hostnameLabelName }: Context<C, S, A>
 ) {
@@ -42,7 +42,7 @@ export function setDefaultLabels<C = AppContext, S = Source, A = Args>(
   register.setDefaultLabels(labels);
 }
 
-export function toggleEndpoint<C = AppContext, S = Source, A = Args>(
+export function toggleEndpoint<C extends BaseContext = AppContext, S = Source, A = Args>(
   register: Registry,
   { metricsEndpoint, app, metricsEndpointPath }: Context<C, S, A>
 ) {
