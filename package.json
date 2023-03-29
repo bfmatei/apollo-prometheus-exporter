@@ -1,5 +1,5 @@
 {
-  "name": "@bmatei/apollo-prometheus-exporter",
+  "name": "@hitz-group/apollo-prometheus-exporter",
   "version": "0.0.0-development",
   "description": "Plugin for Apollo Server to export metrics in Prometheus format",
   "keywords": [
@@ -11,7 +11,7 @@
   ],
   "author": "Bogdan Matei <bogdan@matei.dev>",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/index.js",
   "homepage": "https://github.com/bfmatei/apollo-prometheus-exporter#readme",
   "repository": "github:bfmatei/apollo-prometheus-exporter",
   "scripts": {
