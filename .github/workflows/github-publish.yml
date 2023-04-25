@@ -1,0 +1,33 @@
+name: github-publish
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  github-publish:
+    name: github-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@hitz-group'
+      - name: Install Node Dependencies
+        run: yarn install
+      - name: Build packages
+        run: yarn build
+        env:
+          CI: 'TRUE'
+      - name: Publish package
+        run: |
+          npm set @hitz-group:registry=https://npm.pkg.github.com
+          npm set //npm.pkg.github.com/:_authToken ${{ secrets.PAT_TOKEN }}
+          npm publish --verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PAT_TOKEN }}

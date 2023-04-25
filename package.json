@@ -1,6 +1,6 @@
 {
   "name": "@hitz-group/apollo-prometheus-exporter",
-  "version": "0.0.0-development",
+  "version": "0.0.3",
   "description": "Plugin for Apollo Server to export metrics in Prometheus format",
   "keywords": [
     "apollo",
@@ -9,30 +9,20 @@
     "metrics",
     "tracing"
   ],
-  "author": "Bogdan Matei <bogdan@matei.dev>",
   "license": "MIT",
-  "main": "dist/index.js",
-  "homepage": "https://github.com/bfmatei/apollo-prometheus-exporter#readme",
-  "repository": "github:bfmatei/apollo-prometheus-exporter",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/hitz-group/apollo-prometheus-exporter.git"
+  },
   "scripts": {
-    "start": "yarn example:start:watch",
-    "build": "yarn lib:build",
-    "release": "yarn lib:release",
-    "prettier": "prettier --write \"./**/*.{ts,json,graphql,yaml,md}\"",
-    "lint-staged": "lint-staged",
-    "example:clean-dist": "rimraf dist_example",
-    "example:codegen": "graphql-codegen",
-    "example:compile": "tsc -p example/tsconfig.json",
-    "example:build": "run-s example:clean-dist example:codegen example:compile",
-    "example:serve": "ts-node -P example/tsconfig.json example/src/index.ts",
-    "example:start": "run-s example:codegen example:serve",
-    "example:start:watch": "nodemon --watch example --watch lib -e ts,graphql,json --exec 'yarn example:start'",
-    "example:simulate-activity": "artillery run artillery.yaml",
-    "lib:clean-dist": "rimraf dist",
-    "lib:compile": "tsc -p lib/tsconfig.json",
-    "lib:build": "run-s lib:clean-dist lib:compile lib:copy-assets",
-    "lib:copy-assets": "copyfiles -f lib/package.json README.md dist",
-    "lib:release": "semantic-release"
+    "build": "yarn  clean && yarn  compile",
+    "build:watch": "yarn compile -- -w",
+    "clean": "rm -rf ./lib && rm -rf tsconfig.build.tsbuildinfo",
+    "compile": "tsc -p ./tsconfig.build.json",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.js,.tsx --max-warnings=0 ",
+    "lint:report": "eslint . --output-file ./eslint_report.json --format json  --ext .ts,.js,.tsx | true"
   },
   "dependencies": {
     "express": "4.17.2",
@@ -45,22 +35,26 @@
     "graphql-tools": ">=8.0.0"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.0",
-    "@semantic-release/git": "^10.0.0",
-    "@types/node": "^16.11.3",
-    "@types/uuid": "^8.3.1",
     "@apollo/server": ">=4.3.0",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "4.6.1",
+    "@typescript-eslint/parser": "4.6.1",
     "artillery": "^1.7.9",
     "copyfiles": "^2.4.1",
     "graphql": ">=16.0.0",
     "graphql-tools": ">=8.0.0",
-    "lint-staged": "^11.2.3",
-    "nodemon": "^2.0.14",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.4.1",
-    "rimraf": "^3.0.2",
-    "semantic-release": "^18.0.0",
+    "eslint": "7.12.1",
+    "eslint-config-prettier": "6.15.0",
+    "husky": "4.3.0",
+    "jest": "26.6.3",
+    "prettier": "2.2.1",
+    "pretty-quick": "3.1.0",
     "ts-node": "^10.3.1",
     "typescript": "4.9.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint && pretty-quick --staged"
+    }
   }
 }

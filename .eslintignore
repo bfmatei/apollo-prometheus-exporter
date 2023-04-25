@@ -1,0 +1,8 @@
+**/node_modules
+**/lib
+eslint_report.json
+.nyc_output
+coverage
+.vscode
+jest.config.js
+*.d.ts
