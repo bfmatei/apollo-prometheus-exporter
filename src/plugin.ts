@@ -59,6 +59,7 @@ export function toggleEndpoint<C extends BaseContext = AppContext, S = Source, A
 export function createPlugin<C extends BaseContext = AppContext, S = Source, A = Args>(
   options: PluginOptions<C, S, A>
 ): ApolloServerPlugin {
+  const { service } = options;
   const context = generateContext<C, S, A>(options);
   const register = context.register;
 
@@ -70,5 +71,5 @@ export function createPlugin<C extends BaseContext = AppContext, S = Source, A =
 
   const metrics = generateMetrics(register, context);
 
-  return generateHooks(metrics);
+  return generateHooks(metrics, service);
 }
