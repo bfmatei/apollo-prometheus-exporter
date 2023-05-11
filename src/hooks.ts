@@ -9,7 +9,9 @@ import { ContextTypes, FieldTypes, MetricsNames, Metrics, MetricTypes } from './
 export function getLabelsFromContext(context: any): LabelValues<string> {
   return {
     operationName: context?.request?.operationName,
-    operation: context?.operation?.operation
+    operation: context?.operation?.operation,
+    app: context.request.http?.headers.get('app'),
+    service: context.service
   };
 }
 

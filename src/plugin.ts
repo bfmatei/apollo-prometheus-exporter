@@ -15,6 +15,7 @@ export type SkipMetricsMap<C extends BaseContext = BaseContext, S = any, A = { [
 export type PluginOptions<C extends BaseContext = BaseContext, S = any, A = { [p: string]: any }> = Partial<
   Omit<Context, 'skipMetrics'> & {
     skipMetrics: SkipMetricsMap<C, S, A>;
+    service: string;
   }
 >;
 
