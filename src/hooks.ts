@@ -102,6 +102,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
     async requestDidStart(requestContext) {
       const requestStartDate = Date.now();
 
+      console.log('metrics label', getLabelsFromContext(requestContext));
       actionMetric({ name: MetricsNames.QUERY_STARTED, labels: getLabelsFromContext(requestContext) }, requestContext);
 
       return {
