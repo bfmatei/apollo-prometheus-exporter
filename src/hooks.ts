@@ -6,6 +6,14 @@ import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
 import { convertMsToS, filterLabels } from './helpers';
 import { ContextTypes, FieldTypes, MetricsNames, Metrics, MetricTypes } from './metrics';
 
+const CLIENT_ERRORS = [
+  'UNAUTHENTICATED',
+  'BAD_REQUEST',
+  'BAD_USER_INPUT',
+  'GRAPHQL_VALIDATION_FAILED',
+  'GRAPHQL_PARSE_FAILED'
+];
+
 export function getLabelsFromContext(context: any): LabelValues<string> {
   return {
     operationName: context?.request?.operationName,
@@ -100,26 +108,53 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
     async requestDidStart(requestContext) {
       const requestStartDate = Date.now();
 
-      actionMetric({ name: MetricsNames.QUERY_STARTED, labels: getLabelsFromContext(requestContext) }, requestContext);
+      actionMetric(
+        {
+          name: MetricsNames.QUERY_STARTED,
+          labels: getLabelsFromContext(requestContext)
+        },
+        requestContext
+      );
 
       return {
         async parsingDidStart(context) {
-          actionMetric({ name: MetricsNames.QUERY_PARSE_STARTED, labels: getLabelsFromContext(context) }, context);
+          actionMetric(
+            {
+              name: MetricsNames.QUERY_PARSE_STARTED,
+              labels: getLabelsFromContext(context)
+            },
+            context
+          );
 
           return async (err) => {
             if (err) {
-              actionMetric({ name: MetricsNames.QUERY_PARSE_FAILED, labels: getLabelsFromContext(context) }, context);
+              actionMetric(
+                {
+                  name: MetricsNames.QUERY_PARSE_FAILED,
+                  labels: getLabelsFromContext(context)
+                },
+                context
+              );
             }
           };
         },
 
         async validationDidStart(context) {
-          actionMetric({ name: MetricsNames.QUERY_VALIDATION_STARTED, labels: getLabelsFromContext(context) }, context);
+          actionMetric(
+            {
+              name: MetricsNames.QUERY_VALIDATION_STARTED,
+              labels: getLabelsFromContext(context)
+            },
+            context
+          );
 
           return async (err) => {
             if (err) {
               actionMetric(
-                { name: MetricsNames.QUERY_VALIDATION_FAILED, labels: getLabelsFromContext(context) },
+                {
+                  name: MetricsNames.QUERY_VALIDATION_FAILED,
+                  labels: getLabelsFromContext(context)
+                },
                 context
               );
             }
@@ -127,11 +162,23 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
         },
 
         async didResolveOperation(context) {
-          actionMetric({ name: MetricsNames.QUERY_RESOLVED, labels: getLabelsFromContext(context) }, context);
+          actionMetric(
+            {
+              name: MetricsNames.QUERY_RESOLVED,
+              labels: getLabelsFromContext(context)
+            },
+            context
+          );
         },
 
         async executionDidStart(context) {
-          actionMetric({ name: MetricsNames.QUERY_EXECUTION_STARTED, labels: getLabelsFromContext(context) }, context);
+          actionMetric(
+            {
+              name: MetricsNames.QUERY_EXECUTION_STARTED,
+              labels: getLabelsFromContext(context)
+            },
+            context
+          );
 
           return {
             willResolveField(field: GraphQLFieldResolverParams<any, any>) {
@@ -157,7 +204,10 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
             async executionDidEnd(err) {
               if (err) {
                 actionMetric(
-                  { name: MetricsNames.QUERY_EXECUTION_FAILED, labels: getLabelsFromContext(context) },
+                  {
+                    name: MetricsNames.QUERY_EXECUTION_FAILED,
+                    labels: getLabelsFromContext(context)
+                  },
                   context
                 );
               }
@@ -167,8 +217,19 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
 
         async didEncounterErrors(context) {
           const requestEndDate = Date.now();
-
-          actionMetric({ name: MetricsNames.QUERY_FAILED, labels: getLabelsFromContext(context) }, context);
+          const hasServerError =
+            (context.errors || []).filter((error) => {
+              return !CLIENT_ERRORS.includes(error?.extensions?.code as string);
+            }).length > 0;
+          if (hasServerError) {
+            actionMetric(
+              {
+                name: MetricsNames.QUERY_FAILED,
+                labels: getLabelsFromContext(context)
+              },
+              context
+            );
+          }
 
           actionMetric(
             {
