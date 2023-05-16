@@ -37,10 +37,7 @@ export interface SkipMetricsMap<C extends BaseContext = AppContext, S = Source, 
   [MetricsNames.SERVER_CLOSING]: SkipFn<ServerLabels>;
   [MetricsNames.QUERY_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContext<C>>;
   [MetricsNames.QUERY_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextDidEncounterErrors<C>>;
-  [MetricsNames.QUERY_CLIENT_FAILED_BY_CLIENT]: SkipFnWithContext<
-    QueryLabels,
-    GraphQLRequestContextDidEncounterErrors<C>
-  >;
+  [MetricsNames.QUERY_FAILED_BY_CLIENT]: SkipFnWithContext<QueryLabels, GraphQLRequestContextDidEncounterErrors<C>>;
   [MetricsNames.QUERY_PARSE_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextParsingDidStart<C>>;
   [MetricsNames.QUERY_PARSE_FAILED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextParsingDidStart<C>>;
   [MetricsNames.QUERY_VALIDATION_STARTED]: SkipFnWithContext<QueryLabels, GraphQLRequestContextValidationDidStart<C>>;
@@ -94,7 +91,7 @@ export function generateContext<C extends BaseContext = BaseContext, S = Source,
       [MetricsNames.SERVER_CLOSING]: () => false,
       [MetricsNames.QUERY_STARTED]: () => false,
       [MetricsNames.QUERY_FAILED]: () => false,
-      [MetricsNames.QUERY_CLIENT_FAILED_BY_CLIENT]: () => false,
+      [MetricsNames.QUERY_FAILED_BY_CLIENT]: () => false,
       [MetricsNames.QUERY_PARSE_STARTED]: () => false,
       [MetricsNames.QUERY_PARSE_FAILED]: () => false,
       [MetricsNames.QUERY_VALIDATION_STARTED]: () => false,

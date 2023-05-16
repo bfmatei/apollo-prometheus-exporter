@@ -69,7 +69,7 @@ export enum MetricsNames {
   SERVER_CLOSING = 'apollo_server_closing',
   QUERY_STARTED = 'apollo_query_started',
   QUERY_FAILED = 'apollo_query_failed',
-  QUERY_CLIENT_FAILED_BY_CLIENT = 'apollo_query_failed_by_client_input',
+  QUERY_FAILED_BY_CLIENT = 'apollo_query_failed_by_client_input',
   QUERY_PARSE_STARTED = 'apollo_query_parse_started',
   QUERY_PARSE_FAILED = 'apollo_query_parse_failed',
   QUERY_VALIDATION_STARTED = 'apollo_query_validation_started',
@@ -168,7 +168,7 @@ export const metricsConfig: MetricConfig[] = [
     labelNames: queryLabelNames
   },
   {
-    name: MetricsNames.QUERY_CLIENT_FAILED_BY_CLIENT,
+    name: MetricsNames.QUERY_FAILED_BY_CLIENT,
     help: 'The amount of queries that failed by client input.',
     type: MetricTypes.COUNTER,
     labelNames: queryLabelNames
