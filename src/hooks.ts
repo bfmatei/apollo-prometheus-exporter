@@ -104,21 +104,30 @@ export function generateHooks(metrics: Metrics, service: string): ApolloServerPl
       const requestStartDate = Date.now();
 
       actionMetric(
-        { name: MetricsNames.QUERY_STARTED, labels: getLabelsFromContext(requestContext, service) },
+        {
+          name: MetricsNames.QUERY_STARTED,
+          labels: getLabelsFromContext(requestContext, service)
+        },
         requestContext
       );
 
       return {
         async parsingDidStart(context) {
           actionMetric(
-            { name: MetricsNames.QUERY_PARSE_STARTED, labels: getLabelsFromContext(context, service) },
+            {
+              name: MetricsNames.QUERY_PARSE_STARTED,
+              labels: getLabelsFromContext(context, service)
+            },
             context
           );
 
           return async (err) => {
             if (err) {
               actionMetric(
-                { name: MetricsNames.QUERY_PARSE_FAILED, labels: getLabelsFromContext(context, service) },
+                {
+                  name: MetricsNames.QUERY_PARSE_FAILED,
+                  labels: getLabelsFromContext(context, service)
+                },
                 context
               );
             }
@@ -127,7 +136,10 @@ export function generateHooks(metrics: Metrics, service: string): ApolloServerPl
 
         async validationDidStart(context) {
           actionMetric(
-            { name: MetricsNames.QUERY_VALIDATION_STARTED, labels: getLabelsFromContext(context, service) },
+            {
+              name: MetricsNames.QUERY_VALIDATION_STARTED,
+              labels: getLabelsFromContext(context, service)
+            },
             context
           );
 
@@ -175,7 +187,10 @@ export function generateHooks(metrics: Metrics, service: string): ApolloServerPl
             async executionDidEnd(err) {
               if (err) {
                 actionMetric(
-                  { name: MetricsNames.QUERY_EXECUTION_FAILED, labels: getLabelsFromContext(context, service) },
+                  {
+                    name: MetricsNames.QUERY_EXECUTION_FAILED,
+                    labels: getLabelsFromContext(context, service)
+                  },
                   context
                 );
               }
