@@ -25,9 +25,6 @@ jobs:
         env:
           CI: 'TRUE'
       - name: Publish package
-        run: |
-          npm set @hitz-group:registry=https://npm.pkg.github.com
-          npm set //npm.pkg.github.com/:_authToken ${{ secrets.PAT_TOKEN }}
-          npm publish --verbose
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PAT_TOKEN }}
