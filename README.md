@@ -1,4 +1,5 @@
 # Apollo Prometheus Exporter
+
 Forked from https://github.com/bfmatei/apollo-prometheus-exporter
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bfmatei/apollo-prometheus-exporter/Release)
@@ -19,6 +20,7 @@ Server v2 is still supported in v1.x.y. The two versions will be features-matche
 | `apollo_server_closing`                  | The last timestamp when Apollo Server was closing.      | Gauge     |
 | `apollo_query_started`                   | The amount of received queries.                         | Counter   |
 | `apollo_query_failed`                    | The amount of queries that failed.                      | Counter   |
+| `apollo_query_failed_by_client`          | The amount of queries that failed by client side        | Counter   |
 | `apollo_query_parse_started`             | The amount of queries for which parsing has started.    | Counter   |
 | `apollo_query_parse_failed`              | The amount of queries for which parsing has failed.     | Counter   |
 | `apollo_query_validation_started`        | The amount of queries for which validation has started. | Counter   |
