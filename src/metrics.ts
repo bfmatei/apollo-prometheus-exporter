@@ -96,7 +96,7 @@ export interface MetricConfig {
 
 export const serverLabelNames = ['version'];
 
-export const queryLabelNames = ['operationName', 'operation'];
+export const queryLabelNames = ['operationName', 'operation', 'service', 'app'];
 
 export const fieldLabelNames = ['operationName', 'operation', 'fieldName', 'parentType', 'returnType', 'pathLength'];
 
