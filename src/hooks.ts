@@ -8,10 +8,12 @@ import { ContextTypes, FieldTypes, MetricsNames, Metrics, MetricTypes } from './
 
 const clientErrors = ['BAD_USER_INPUT', 'INVALID_CREDENTIALS'];
 
-export function getLabelsFromContext(context: any): LabelValues<string> {
+export function getLabelsFromContext(context: any, service: string): LabelValues<string> {
   return {
     operationName: context?.request?.operationName,
-    operation: context?.operation?.operation
+    operation: context?.operation?.operation,
+    app: context.request.http?.headers.get('app'),
+    service: service
   };
 }
 
@@ -41,7 +43,7 @@ export function getLabelsFromFieldResolver({
   };
 }
 
-export function generateHooks(metrics: Metrics): ApolloServerPlugin {
+export function generateHooks(metrics: Metrics, service: string): ApolloServerPlugin {
   const actionMetric = (
     {
       name,
@@ -105,7 +107,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
       actionMetric(
         {
           name: MetricsNames.QUERY_STARTED,
-          labels: getLabelsFromContext(requestContext)
+          labels: getLabelsFromContext(requestContext, service)
         },
         requestContext
       );
@@ -115,7 +117,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           actionMetric(
             {
               name: MetricsNames.QUERY_PARSE_STARTED,
-              labels: getLabelsFromContext(context)
+              labels: getLabelsFromContext(context, service)
             },
             context
           );
@@ -125,7 +127,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
               actionMetric(
                 {
                   name: MetricsNames.QUERY_PARSE_FAILED,
-                  labels: getLabelsFromContext(context)
+                  labels: getLabelsFromContext(context, service)
                 },
                 context
               );
@@ -137,7 +139,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           actionMetric(
             {
               name: MetricsNames.QUERY_VALIDATION_STARTED,
-              labels: getLabelsFromContext(context)
+              labels: getLabelsFromContext(context, service)
             },
             context
           );
@@ -145,10 +147,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           return async (err) => {
             if (err) {
               actionMetric(
-                {
-                  name: MetricsNames.QUERY_VALIDATION_FAILED,
-                  labels: getLabelsFromContext(context)
-                },
+                { name: MetricsNames.QUERY_VALIDATION_FAILED, labels: getLabelsFromContext(context, service) },
                 context
               );
             }
@@ -156,21 +155,12 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
         },
 
         async didResolveOperation(context) {
-          actionMetric(
-            {
-              name: MetricsNames.QUERY_RESOLVED,
-              labels: getLabelsFromContext(context)
-            },
-            context
-          );
+          actionMetric({ name: MetricsNames.QUERY_RESOLVED, labels: getLabelsFromContext(context, service) }, context);
         },
 
         async executionDidStart(context) {
           actionMetric(
-            {
-              name: MetricsNames.QUERY_EXECUTION_STARTED,
-              labels: getLabelsFromContext(context)
-            },
+            { name: MetricsNames.QUERY_EXECUTION_STARTED, labels: getLabelsFromContext(context, service) },
             context
           );
 
@@ -185,7 +175,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
                   {
                     name: MetricsNames.QUERY_FIELD_RESOLUTION_DURATION,
                     labels: {
-                      ...getLabelsFromContext(context),
+                      ...getLabelsFromContext(context, service),
                       ...getLabelsFromFieldResolver(field)
                     },
                     value: fieldResolveEnd - fieldResolveStart
@@ -200,7 +190,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
                 actionMetric(
                   {
                     name: MetricsNames.QUERY_EXECUTION_FAILED,
-                    labels: getLabelsFromContext(context)
+                    labels: getLabelsFromContext(context, service)
                   },
                   context
                 );
@@ -219,7 +209,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
             actionMetric(
               {
                 name: MetricsNames.QUERY_FAILED_BY_CLIENT,
-                labels: getLabelsFromContext(context)
+                labels: getLabelsFromContext(context, service)
               },
               context
             );
@@ -228,7 +218,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
           actionMetric(
             {
               name: MetricsNames.QUERY_FAILED,
-              labels: getLabelsFromContext(context)
+              labels: getLabelsFromContext(context, service)
             },
             context
           );
@@ -237,7 +227,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
             {
               name: MetricsNames.QUERY_DURATION,
               labels: {
-                ...getLabelsFromContext(context),
+                ...getLabelsFromContext(context, service),
                 success: 'false'
               },
               value: requestEndDate - requestStartDate
@@ -254,7 +244,7 @@ export function generateHooks(metrics: Metrics): ApolloServerPlugin {
               {
                 name: MetricsNames.QUERY_DURATION,
                 labels: {
-                  ...getLabelsFromContext(context),
+                  ...getLabelsFromContext(context, service),
                   success: 'true'
                 },
                 value: requestEndDate - requestStartDate
