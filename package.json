@@ -1,6 +1,6 @@
 {
   "name": "@hitz-group/apollo-prometheus-exporter",
-  "version": "2.0.9-rc1",
+  "version": "2.0.12",
   "description": "Plugin for Apollo Server to export metrics in Prometheus format",
   "keywords": [
     "apollo",

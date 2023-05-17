@@ -6,7 +6,8 @@ import { Counter, Gauge, Histogram, LabelValues } from 'prom-client';
 import { convertMsToS, filterLabels } from './helpers';
 import { ContextTypes, FieldTypes, MetricsNames, Metrics, MetricTypes } from './metrics';
 
-const BAD_USER_INPUT = 'BAD_USER_INPUT';
+const clientErrors = ['BAD_USER_INPUT', 'INVALID_CREDENTIALS'];
+
 export function getLabelsFromContext(context: any, service: string): LabelValues<string> {
   return {
     operationName: context?.request?.operationName,
@@ -201,13 +202,13 @@ export function generateHooks(metrics: Metrics, service: string): ApolloServerPl
         async didEncounterErrors(context) {
           const requestEndDate = Date.now();
           const hasBadUserInput = (context.errors || []).some((error) => {
-            return BAD_USER_INPUT === error?.extensions?.code;
+            return clientErrors.some((err) => err === error?.extensions?.code);
           });
 
           if (hasBadUserInput) {
             actionMetric(
               {
-                name: MetricsNames.QUERY_CLIENT_FAILED_BY_CLIENT,
+                name: MetricsNames.QUERY_FAILED_BY_CLIENT,
                 labels: getLabelsFromContext(context, service)
               },
               context
