@@ -1,6 +1,6 @@
 {
-  "name": "@hitz-group/apollo-prometheus-exporter",
-  "version": "2.0.13",
+  "name": "@oolio-group/apollo-prometheus-exporter",
+  "version": "2.0.14",
   "description": "Plugin for Apollo Server to export metrics in Prometheus format",
   "keywords": [
     "apollo",
@@ -13,7 +13,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/hitz-group/apollo-prometheus-exporter.git"
+    "url": "http://github.com/oolio-group/apollo-prometheus-exporter.git"
   },
   "scripts": {
     "build": "yarn  clean && yarn  compile",
