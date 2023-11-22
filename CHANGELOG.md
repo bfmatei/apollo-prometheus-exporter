@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v2.1.1...v3.0.0) (2023-11-22)
+
+
+### chore
+
+* migrate to apollo v4 ([35ef82f](https://github.com/bfmatei/apollo-prometheus-exporter/commit/35ef82fb056cb6369d3a2c95533cb043da9b2ee4))
+
+
+### BREAKING CHANGES
+
+* use v1 for Apollo Server 2, v2 for Apollo Server 3, and v3 for Apollo Server 4
+
 ## [2.1.1](https://github.com/bfmatei/apollo-prometheus-exporter/compare/v2.1.0...v2.1.1) (2021-10-22)
 
 
